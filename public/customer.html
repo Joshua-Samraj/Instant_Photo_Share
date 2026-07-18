@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Natural Studio | Client Access Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            bg: '#FBF9F5',
+                            card: '#FFFFFF',
+                            border: '#EBE6DE',
+                            dark: '#1A1817',
+                            muted: '#78736A',
+                            accent: '#8C7A6B',
+                            gold: '#C5A880',
+                            light: '#F4F1EA'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-studio-bg font-sans text-studio-dark min-h-screen selection:bg-studio-gold selection:text-white flex flex-col justify-between">
+
+    <header class="bg-studio-card/90 backdrop-blur-md border-b border-studio-border sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 sm:py-6 flex justify-between items-center">
+            <div>
+                <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-studio-gold font-semibold block mb-0.5">Private Client Gallery</span>
+                <h1 class="text-2xl sm:text-3xl font-serif tracking-wide text-studio-dark font-normal">Natural STUDIO</h1>
+            </div>
+            <a href="/photographer.html" class="px-3.5 py-2 sm:px-5 sm:py-2.5 border border-studio-border hover:border-studio-dark text-studio-dark text-[10px] sm:text-xs tracking-widest uppercase transition-all duration-300 bg-transparent hover:bg-studio-dark hover:text-studio-bg">
+                Archive &rarr;
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 sm:py-16 flex-grow w-full">
+        
+        <section id="step-verification" class="max-w-md mx-auto bg-studio-card p-6 sm:p-10 border border-studio-border shadow-[0_15px_50px_rgba(0,0,0,0.03)]">
+            <div class="text-center mb-6 sm:mb-8">
+                <span class="text-[10px] uppercase tracking-[0.25em] text-studio-gold block mb-1 sm:mb-2">Step 1 of 2 &bull; Verification</span>
+                <h2 class="text-2xl sm:text-3xl font-serif text-studio-dark">Access Your Portfolio</h2>
+                <p class="text-xs text-studio-muted mt-1.5 sm:mt-2 font-light leading-relaxed">Enter your credentials and select your collection to unlock your photographs.</p>
+            </div>
+            
+            <form id="verify-form" class="space-y-5 sm:space-y-6">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-1.5 sm:mb-2">Collection Identifier</label>
+                    <input type="text" id="verify-event-id" list="event-suggestions" autocomplete="off" placeholder="Select or enter collection ID..." required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-base sm:text-xs tracking-wider transition-colors">
+                    <datalist id="event-suggestions"></datalist>
+                    <p id="event-loading-hint" class="text-[10px] text-studio-muted mt-1.5 font-light">Synchronizing available collections...</p>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-1.5 sm:mb-2">Full Name</label>
+                    <input type="text" id="verify-name" placeholder="e.g., Eleanor Vance" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-base sm:text-xs tracking-wider transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-1.5 sm:mb-2">Phone Number</label>
+                    <input type="tel" id="verify-phone" placeholder="+1 (555) 000-0000" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-base sm:text-xs tracking-wider transition-colors">
+                </div>
+
+                <button type="submit" id="verify-btn" class="w-full bg-studio-dark hover:bg-studio-accent text-studio-bg font-normal py-4 px-6 tracking-[0.2em] text-xs uppercase transition-all duration-300 min-h-[48px] flex items-center justify-center">
+                    Authenticate &amp; Enter &rarr;
+                </button>
+            </form>
+            <div id="verify-status" class="mt-6 hidden p-4 text-xs tracking-wide font-light border"></div>
+        </section>
+
+        <section id="step-scan" class="hidden w-full">
+            <div class="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12">
+                <div class="lg:col-span-4 bg-studio-card p-6 sm:p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)] h-fit">
+                    <div class="border-b border-studio-border pb-4 mb-5 flex justify-between items-baseline">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-[0.25em] text-studio-gold block mb-0.5">Step 2 of 2 &bull; Biometric Scan</span>
+                            <h2 class="text-xl sm:text-2xl font-serif text-studio-dark">Selfie Match</h2>
+                        </div>
+                        <span id="active-event-badge" class="text-[10px] uppercase tracking-widest text-studio-muted font-mono border border-studio-border px-2 py-1 bg-studio-bg"></span>
+                    </div>
+                    
+                    <p class="text-xs text-studio-muted mb-6 font-light leading-relaxed">Provide a clear facial capture to allow our artificial intelligence to isolate your appearance within the collection archive.</p>
+                    
+                    <form id="match-form" class="space-y-5 sm:space-y-6">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Capture Method</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button" id="open-cust-camera-btn" class="py-3.5 px-4 bg-studio-bg hover:bg-studio-light border border-studio-border text-studio-dark font-normal text-xs tracking-widest uppercase transition-colors min-h-[44px] flex items-center justify-center">
+                                    📷 Camera
+                                </button>
+                                <label class="py-3.5 px-4 bg-studio-bg hover:bg-studio-light border border-studio-border text-studio-dark font-normal text-xs tracking-widest uppercase transition-colors flex items-center justify-center cursor-pointer min-h-[44px]">
+                                    <span>📁 Browse</span>
+                                    <input type="file" id="match-file-input" accept="image/*" class="hidden">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="match-preview-container" class="hidden relative border border-studio-border aspect-[4/5] bg-studio-bg overflow-hidden max-w-[220px] sm:max-w-none mx-auto">
+                            <img id="match-preview-img" class="w-full h-full object-cover">
+                        </div>
+
+                        <button type="submit" id="search-btn" class="w-full bg-studio-dark hover:bg-studio-accent text-studio-bg font-normal py-4 px-6 tracking-[0.2em] text-xs uppercase transition-all duration-300 disabled:opacity-30 disabled:hover:bg-studio-dark min-h-[48px] flex items-center justify-center" disabled>
+                            Retrieve Photographs
+                        </button>
+                    </form>
+
+                    <div id="match-status" class="mt-6 hidden p-4 text-xs tracking-wide font-light border"></div>
+                </div>
+
+                <div class="lg:col-span-8 bg-studio-card p-6 sm:p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)]">
+                    <div class="border-b border-studio-border pb-4 sm:pb-6 mb-6">
+                        <span class="text-[10px] uppercase tracking-[0.25em] text-studio-muted block mb-0.5">Curated Results</span>
+                        <h3 class="text-2xl sm:text-3xl font-serif text-studio-dark">Your Personal Collection</h3>
+                    </div>
+                    <div id="customer-gallery" class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-6 min-h-[300px] sm:min-h-[400px] items-center justify-center bg-studio-bg border border-studio-border p-3 sm:p-6">
+                        <p id="empty-customer-msg" class="col-span-full text-center text-[11px] sm:text-xs tracking-widest uppercase text-studio-muted font-light py-8">Submit a biometric sample to retrieve your curated gallery</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="camera-modal" class="fixed inset-0 bg-studio-dark/90 backdrop-blur-md flex items-center justify-center z-50 hidden p-2 sm:p-6">
+        <div class="bg-studio-card border border-studio-border max-w-md w-full shadow-2xl flex flex-col max-h-[95vh]">
+            <div class="p-4 sm:p-6 border-b border-studio-border flex justify-between items-center">
+                <div>
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-studio-gold block">Studio Capture</span>
+                    <h3 class="font-serif text-lg sm:text-xl text-studio-dark">Live Biometric Sample</h3>
+                </div>
+                <button id="close-camera-btn" class="text-studio-muted hover:text-studio-dark text-2xl px-2 py-1 leading-none">&times;</button>
+            </div>
+            <div class="relative bg-studio-dark aspect-[4/5] flex-grow flex items-center justify-center overflow-hidden max-h-[60vh] sm:max-h-none">
+                <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover"></video>
+                <canvas id="webcam-canvas" class="hidden"></canvas>
+            </div>
+            <div class="p-4 sm:p-6 bg-studio-bg border-t border-studio-border flex justify-end space-x-3">
+                <button id="cancel-camera-btn" class="flex-1 sm:flex-initial px-4 py-3 sm:px-5 border border-studio-border bg-studio-card hover:bg-studio-light text-studio-dark text-xs tracking-widest uppercase transition-colors min-h-[44px]">Cancel</button>
+                <button id="capture-btn" class="flex-1 sm:flex-initial px-5 py-3 sm:px-6 bg-studio-dark hover:bg-studio-accent text-studio-bg text-xs tracking-widest uppercase transition-colors min-h-[44px]">Capture</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-studio-border mt-12 sm:mt-20 py-8 sm:py-12 text-center text-studio-muted text-[10px] sm:text-xs tracking-widest uppercase font-light px-4">
+        Natural Natural Studio &copy; 2026 &bull; Facial Recognition Distribution Architecture
+    </footer>
+
+    <script>
+        let verifiedEventId = null;
+
+        async function parseResponseSafe(response) {
+            const text = await response.text();
+            if (!text) throw new Error("Empty response from server.");
+            try { return JSON.parse(text); } catch (err) { throw new Error(`Invalid response: ${text.slice(0, 80)}`); }
+        }
+
+        async function loadEventSuggestions() {
+            const datalist = document.getElementById('event-suggestions');
+            const hint = document.getElementById('event-loading-hint');
+            try {
+                const res = await fetch('/api/events');
+                const data = await parseResponseSafe(res);
+                if (res.ok && data.events && data.events.length > 0) {
+                    datalist.innerHTML = data.events.map(ev => 
+                        `<option value="${ev.eventId}">${ev.eventName} (${ev.photoCount} photos)</option>`
+                    ).join('');
+                    hint.textContent = `Available collections: ${data.events.length} active event(s)`;
+                } else {
+                    hint.textContent = "No active collections currently published.";
+                }
+            } catch (err) {
+                hint.textContent = "Unable to synchronize collection list.";
+            }
+        }
+
+        loadEventSuggestions();
+
+        async function uploadSingleToServer(file) {
+            const formData = new FormData();
+            formData.append('images', file);
+            const res = await fetch('/api/upload-storage', { method: 'POST', body: formData });
+            const data = await parseResponseSafe(res);
+            if (!res.ok || !data.success) throw new Error(data.error || "Failed to store image.");
+            return data.urls[0];
+        }
+
+        const verifyForm = document.getElementById('verify-form');
+        const verifyStatus = document.getElementById('verify-status');
+        const verifyBtn = document.getElementById('verify-btn');
+
+        verifyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const eventId = document.getElementById('verify-event-id').value.trim();
+            const name = document.getElementById('verify-name').value.trim();
+            const phone = document.getElementById('verify-phone').value.trim();
+
+            verifyBtn.disabled = true;
+            verifyStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-bg border-studio-gold text-studio-dark block";
+            verifyStatus.textContent = "Authenticating client records and registering collection access...";
+
+            try {
+                const res = await fetch('/api/customers/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, eventId })
+                });
+
+                const data = await parseResponseSafe(res);
+                verifyBtn.disabled = false;
+
+                if (res.ok && data.success) {
+                    verifiedEventId = eventId;
+                    document.getElementById('active-event-badge').textContent = eventId;
+                    document.getElementById('step-verification').classList.add('hidden');
+                    document.getElementById('step-scan').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else { throw new Error(data.error); }
+            } catch (err) {
+                verifyBtn.disabled = false;
+                verifyStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-red-50 border-red-200 text-red-900 block";
+                verifyStatus.textContent = `Authentication Failed: ${err.message}`;
+            }
+        });
+
+        let currentSelfieFile = null;
+        const matchFileInput = document.getElementById('match-file-input');
+        const matchPreviewContainer = document.getElementById('match-preview-container');
+        const matchPreviewImg = document.getElementById('match-preview-img');
+        const searchBtn = document.getElementById('search-btn');
+        const matchForm = document.getElementById('match-form');
+        const matchStatus = document.getElementById('match-status');
+        const customerGallery = document.getElementById('customer-gallery');
+
+        function setCustomerSelfie(file) {
+            currentSelfieFile = file;
+            matchPreviewImg.src = URL.createObjectURL(file);
+            matchPreviewContainer.classList.remove('hidden');
+            searchBtn.disabled = false;
+        }
+
+        matchFileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) setCustomerSelfie(e.target.files[0]);
+        });
+
+        matchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentSelfieFile || !verifiedEventId) return;
+
+            searchBtn.disabled = true;
+            matchStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-bg border-studio-gold text-studio-dark block";
+            matchStatus.textContent = "Phase 1/2: Processing biometric sample...";
+            customerGallery.innerHTML = '';
+
+            try {
+                const selfieUrl = await uploadSingleToServer(currentSelfieFile);
+                matchStatus.textContent = "Phase 2/2: Mapping facial vectors against collection matrix...";
+
+                const response = await fetch('/api/match-gallery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selfieUrl, eventId: verifiedEventId })
+                });
+
+                const data = await parseResponseSafe(response);
+                searchBtn.disabled = false;
+
+                if (response.ok) {
+                    if (!data.photos || data.photos.length === 0) {
+                        matchStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-light border-studio-border text-studio-dark block";
+                        matchStatus.textContent = "No matching portraits isolated in this collection.";
+                        customerGallery.innerHTML = '<p class="col-span-full text-center text-[11px] sm:text-xs tracking-widest uppercase text-studio-muted font-light py-8">No matching entries discovered</p>';
+                        return;
+                    }
+
+                    matchStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-light border-studio-dark text-studio-dark block";
+                    matchStatus.textContent = `Portfolio Retrieved: Found ${data.photos.length} matching photograph(s).`;
+
+                    data.photos.forEach(photo => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = "relative aspect-[4/5] overflow-hidden bg-studio-bg border border-studio-border group";
+                        imgContainer.innerHTML = `<img src="${photo.url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">`;
+                        customerGallery.appendChild(imgContainer);
+                    });
+
+                    if (window.innerWidth < 1024) {
+                        customerGallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } else { throw new Error(data.error); }
+            } catch (err) {
+                searchBtn.disabled = false;
+                matchStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-red-50 border-red-200 text-red-900 block";
+                matchStatus.textContent = `Retrieval Error: ${err.message}`;
+            }
+        });
+
+        const cameraModal = document.getElementById('camera-modal');
+        const openCustCameraBtn = document.getElementById('open-cust-camera-btn');
+        const closeCameraBtn = document.getElementById('close-camera-btn');
+        const cancelCameraBtn = document.getElementById('cancel-camera-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const video = document.getElementById('webcam-video');
+        const canvas = document.getElementById('webcam-canvas');
+        let stream = null;
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video.srcObject = stream;
+                cameraModal.classList.remove('hidden');
+            } catch (err) { alert("Unable to initialize optical hardware."); }
+        }
+
+        function stopCamera() {
+            if (stream) { stream.getTracks().forEach(track => track.stop()); stream = null; }
+            cameraModal.classList.add('hidden');
+        }
+
+        openCustCameraBtn.addEventListener('click', startCamera);
+        closeCameraBtn.addEventListener('click', stopCamera);
+        cancelCameraBtn.addEventListener('click', stopCamera);
+
+        captureBtn.addEventListener('click', () => {
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                setCustomerSelfie(new File([blob], `biometric_sample_${Date.now()}.jpg`, { type: "image/jpeg" }));
+                stopCamera();
+            }, 'image/jpeg', 0.95);
+        });
+    </script>
+</body>
+</html>

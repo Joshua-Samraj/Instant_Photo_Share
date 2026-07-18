@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Studio | Photographer Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            bg: '#FBF9F5',
+                            card: '#FFFFFF',
+                            border: '#EBE6DE',
+                            dark: '#1A1817',
+                            muted: '#78736A',
+                            accent: '#8C7A6B',
+                            gold: '#C5A880',
+                            light: '#F4F1EA'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-studio-bg font-sans text-studio-dark min-h-screen selection:bg-studio-gold selection:text-white">
+
+    <header class="bg-studio-card/80 backdrop-blur-md border-b border-studio-border sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-6 py-6 flex justify-between items-center">
+            <div>
+                <span class="text-[10px] uppercase tracking-[0.3em] text-studio-gold font-semibold block mb-1">Natural Studio Archive</span>
+                <h1 class="text-3xl font-serif tracking-wide text-studio-dark font-normal">Natural STUDIO</h1>
+            </div>
+            <a href="/customer.html" class="px-5 py-2.5 border border-studio-border hover:border-studio-dark text-studio-dark rounded-none text-xs tracking-widest uppercase transition-all duration-300 bg-transparent hover:bg-studio-dark hover:text-studio-bg">
+                Client Portal &rarr;
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="lg:col-span-5 bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)] h-fit">
+                <span class="text-[10px] uppercase tracking-[0.25em] text-studio-muted block mb-2">Ingestion Archive</span>
+                <h2 class="text-3xl font-serif text-studio-dark mb-2">Curate Event Pool</h2>
+                <p class="text-xs text-studio-muted leading-relaxed mb-8 font-light">Upload digital negatives and portraits into the facial recognition matrix.</p>
+                
+                <form id="upload-form" class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Collection Identifier</label>
+                        <input type="text" id="upload-event-id" placeholder="e.g., atelier_2026" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-xs tracking-wider transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Collection Display Title</label>
+                        <input type="text" id="upload-event-name" placeholder="e.g., The Botanical Wedding" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-xs tracking-wider transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Select Digital Assets</label>
+                        <label class="flex flex-col items-center justify-center py-8 px-4 bg-studio-bg hover:bg-studio-light text-studio-dark font-normal border border-dashed border-studio-gold/60 cursor-pointer transition-colors group">
+                            <span class="text-xl mb-1 text-studio-gold">&plus;</span>
+                            <span class="text-xs tracking-widest uppercase text-studio-dark group-hover:text-studio-gold transition-colors">Select Portfolio Files</span>
+                            <span class="text-[10px] text-studio-muted mt-1 font-light">High-resolution JPEG or PNG format</span>
+                            <input type="file" id="upload-file-input" accept="image/*" multiple class="hidden">
+                        </label>
+                    </div>
+
+                    <div id="upload-preview-container" class="hidden border border-studio-border p-4 bg-studio-bg">
+                        <p id="upload-count-text" class="text-[10px] uppercase tracking-widest text-studio-dark font-medium mb-3"></p>
+                        <div id="upload-preview-grid" class="grid grid-cols-4 gap-3 max-h-40 overflow-y-auto"></div>
+                    </div>
+
+                    <button type="submit" id="index-btn" class="w-full bg-studio-dark hover:bg-studio-accent text-studio-bg font-normal py-4 px-6 tracking-[0.2em] text-xs uppercase transition-all duration-300 disabled:opacity-30 disabled:hover:bg-studio-dark" disabled>
+                        Process &amp; Index Matrix
+                    </button>
+                </form>
+
+                <div id="upload-status" class="mt-6 hidden p-4 text-xs tracking-wide font-light border"></div>
+            </div>
+
+            <div class="lg:col-span-7 bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)]">
+                <div class="border-b border-studio-border pb-6 mb-6">
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-studio-muted block mb-1">Session Display</span>
+                    <h3 class="text-3xl font-serif text-studio-dark">Processed Photographs</h3>
+                </div>
+                <div id="photographer-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-6 min-h-[350px] items-center justify-center bg-studio-bg border border-studio-border p-6">
+                    <p id="empty-upload-msg" class="col-span-full text-center text-xs tracking-widest uppercase text-studio-muted font-light">No photographs indexed in this session</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)]">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-studio-border pb-6 mb-8 gap-4">
+                <div>
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-studio-gold font-semibold block mb-1">Intelligence Database</span>
+                    <h3 class="text-3xl font-serif text-studio-dark">Archival Collections &amp; Access Logs</h3>
+                </div>
+                <button onclick="loadEvents()" class="px-5 py-2.5 bg-studio-bg hover:bg-studio-light border border-studio-border text-studio-dark text-xs tracking-widest uppercase transition-colors">
+                    Refresh Matrix
+                </button>
+            </div>
+
+            <div id="events-list" class="space-y-8">
+                <p class="text-center text-xs tracking-widest uppercase text-studio-muted py-12 font-light">Synchronizing archive records...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-studio-border mt-20 py-12 text-center text-studio-muted text-xs tracking-widest uppercase font-light">
+        Natural Natural Studio &copy; 2026 &bull; Facial Recognition Distribution Architecture
+    </footer>
+
+    <script>
+        async function parseResponseSafe(response) {
+            const text = await response.text();
+            if (!text) throw new Error("Empty response from server.");
+            try { return JSON.parse(text); } catch (err) { throw new Error(`Invalid response: ${text.slice(0, 80)}`); }
+        }
+
+        async function uploadBatchToServer(files) {
+            const formData = new FormData();
+            Array.from(files).forEach(file => formData.append('images', file));
+            const res = await fetch('/api/upload-storage', { method: 'POST', body: formData });
+            const data = await parseResponseSafe(res);
+            if (!res.ok || !data.success) throw new Error(data.error || "Failed to store images.");
+            return data.urls;
+        }
+
+        let currentPhotographerFiles = [];
+        const uploadForm = document.getElementById('upload-form');
+        const uploadFileInput = document.getElementById('upload-file-input');
+        const uploadPreviewContainer = document.getElementById('upload-preview-container');
+        const uploadPreviewGrid = document.getElementById('upload-preview-grid');
+        const uploadCountText = document.getElementById('upload-count-text');
+        const uploadStatus = document.getElementById('upload-status');
+        const photographerGallery = document.getElementById('photographer-gallery');
+        const emptyUploadMsg = document.getElementById('empty-upload-msg');
+        const indexBtn = document.getElementById('index-btn');
+
+        uploadFileInput.addEventListener('change', (e) => {
+            currentPhotographerFiles = Array.from(e.target.files);
+            uploadPreviewGrid.innerHTML = '';
+            if (currentPhotographerFiles.length > 0) {
+                uploadCountText.textContent = `${currentPhotographerFiles.length} asset(s) staged for indexing`;
+                currentPhotographerFiles.slice(0, 8).forEach(file => {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.className = "w-full h-16 object-cover border border-studio-border";
+                    uploadPreviewGrid.appendChild(img);
+                });
+                uploadPreviewContainer.classList.remove('hidden');
+                indexBtn.disabled = false;
+            } else {
+                uploadPreviewContainer.classList.add('hidden');
+                indexBtn.disabled = true;
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const eventId = document.getElementById('upload-event-id').value.trim();
+            const eventName = document.getElementById('upload-event-name').value.trim();
+            if (currentPhotographerFiles.length === 0) return;
+
+            indexBtn.disabled = true;
+            uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-bg border-studio-gold text-studio-dark block";
+            uploadStatus.textContent = `Phase 1/2: Transferring ${currentPhotographerFiles.length} asset(s) to cloud storage...`;
+
+            try {
+                const imageUrls = await uploadBatchToServer(currentPhotographerFiles);
+                uploadStatus.textContent = `Phase 2/2: Mapping biometric embeddings and indexing vectors...`;
+
+                const response = await fetch('/api/upload-webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imageUrls, eventId, eventName })
+                });
+
+                const data = await parseResponseSafe(response);
+                indexBtn.disabled = false;
+
+                if (response.ok) {
+                    uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-light border-studio-dark text-studio-dark block";
+                    uploadStatus.textContent = `Archival Complete. Processed: ${data.processedCount} assets | Biometric profiles mapped: ${data.facesIndexed}`;
+                    if (emptyUploadMsg) emptyUploadMsg.remove();
+                    
+                    imageUrls.forEach(url => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = "relative aspect-[4/5] overflow-hidden bg-studio-bg border border-studio-border group";
+                        imgContainer.innerHTML = `<img src="${url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">`;
+                        photographerGallery.appendChild(imgContainer);
+                    });
+                    
+                    uploadForm.reset();
+                    uploadPreviewContainer.classList.add('hidden');
+                    currentPhotographerFiles = [];
+                    indexBtn.disabled = true;
+                    loadEvents();
+                } else { throw new Error(data.error); }
+            } catch (err) {
+                indexBtn.disabled = false;
+                uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-red-50 border-red-200 text-red-900 block";
+                uploadStatus.textContent = `Transaction Failed: ${err.message}`;
+            }
+        });
+
+        async function loadEvents() {
+            const container = document.getElementById('events-list');
+            try {
+                const res = await fetch('/api/events');
+                const data = await parseResponseSafe(res);
+                if (!res.ok) throw new Error(data.error);
+
+                if (data.events.length === 0) {
+                    container.innerHTML = `<p class="text-center text-xs tracking-widest uppercase text-studio-muted py-12 font-light">No collections found in the active matrix.</p>`;
+                    return;
+                }
+
+                container.innerHTML = data.events.map(ev => `
+                    <div class="border border-studio-border p-6 bg-studio-bg/50">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-studio-border pb-4 mb-6 gap-2">
+                            <div>
+                                <h4 class="font-serif text-studio-dark text-2xl">${ev.eventName}</h4>
+                                <span class="text-[10px] uppercase tracking-widest text-studio-gold font-mono">ID: ${ev.eventId}</span>
+                            </div>
+                            <div class="sm:text-right flex sm:flex-col gap-4 sm:gap-0 text-xs uppercase tracking-widest text-studio-muted">
+                                <span class="text-studio-dark font-medium">${ev.photoCount} Photographs</span>
+                                <span>${ev.customers.length} Verified Guests</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="text-[10px] uppercase tracking-[0.2em] text-studio-muted mb-4 font-medium">Verified Client Roster</h5>
+                            ${ev.customers.length === 0 ? `<p class="text-xs text-studio-muted font-light italic">No clients have authenticated for this collection.</p>` : `
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    ${ev.customers.map(c => `
+                                        <div class="bg-studio-card p-3 border border-studio-border flex justify-between items-center text-xs">
+                                            <div>
+                                                <span class="font-normal text-studio-dark block tracking-wide">${c.name}</span>
+                                                <span class="text-studio-muted font-mono text-[11px]">${c.phone}</span>
+                                            </div>
+                                            <span class="text-[9px] uppercase tracking-widest text-studio-gold border border-studio-gold/40 px-2 py-1">Verified</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<p class="text-center text-xs tracking-widest uppercase text-red-700 py-12">Failed to synchronize matrix: ${err.message}</p>`;
+            }
+        }
+
+        loadEvents();
+    </script>
+</body>
+</html>
