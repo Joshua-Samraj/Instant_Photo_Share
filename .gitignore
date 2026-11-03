@@ -1,7 +1,12 @@
 .venv_linux
 node_modules
 .env
+.env.*
+!.env.example
 test.txt
-
-
-
+*.log
+.DS_Store
+deepface
+__pycache__/
+*.pyc
+.test-data/

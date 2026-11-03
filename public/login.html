@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photographer Access | Natural Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            bg: '#FBF9F5', card: '#FFFFFF', border: '#EBE6DE', dark: '#1A1817',
+                            muted: '#78736A', accent: '#8C7A6B', gold: '#C5A880', light: '#F4F1EA'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-studio-bg font-sans text-studio-dark min-h-screen">
+
+<div class="min-h-screen grid lg:grid-cols-[1.05fr_1fr]">
+
+    <aside class="hidden lg:flex flex-col justify-between bg-studio-dark text-studio-bg p-12 xl:p-16 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.06] pointer-events-none" style="background-image:radial-gradient(circle at 20% 20%, #C5A880 0, transparent 45%), radial-gradient(circle at 80% 70%, #C5A880 0, transparent 40%);"></div>
+        <a href="/" class="relative z-10">
+            <span class="text-[9px] uppercase tracking-[0.32em] text-studio-gold font-semibold block mb-1">Photographer Access</span>
+            <span class="text-3xl font-serif tracking-wide">Natural STUDIO</span>
+        </a>
+
+        <div class="relative z-10 max-w-md">
+            <h1 class="font-serif text-5xl xl:text-6xl leading-[1.05]">
+                The archive<br><em class="text-studio-gold">does the work.</em>
+            </h1>
+            <p class="mt-6 text-sm leading-relaxed text-studio-bg/65 font-light">
+                Upload once, share one link, and let every guest find their own photographs. You keep the originals; guests get beautifully watermarked previews.
+            </p>
+            <div class="mt-10 space-y-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-studio-gold mt-0.5">&#10003;</span>
+                    <p class="text-[13px] text-studio-bg/75 font-light">Collections, guests and match activity in one dashboard</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-studio-gold mt-0.5">&#10003;</span>
+                    <p class="text-[13px] text-studio-bg/75 font-light">One QR code or link per event — no app for guests</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-studio-gold mt-0.5">&#10003;</span>
+                    <p class="text-[13px] text-studio-bg/75 font-light">Originals stay private; previews are watermarked automatically</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="relative z-10 text-[10px] uppercase tracking-[0.22em] text-studio-bg/35">Natural Studio &copy; 2026</p>
+    </aside>
+
+    <main class="flex items-center justify-center p-5 sm:p-10">
+        <div class="w-full max-w-md">
+            <div class="lg:hidden text-center mb-9">
+                <a href="/" class="inline-block">
+                    <span class="text-[9px] uppercase tracking-[0.3em] text-studio-gold font-semibold block mb-1">Photographer Access</span>
+                    <span class="text-3xl font-serif tracking-wide">Natural STUDIO</span>
+                </a>
+            </div>
+
+            <div class="bg-studio-card border border-studio-border p-6 sm:p-9 shadow-[0_24px_70px_rgba(26,24,23,0.05)]">
+                <div class="grid grid-cols-2 border border-studio-border mb-8" role="tablist" aria-label="Account access">
+                    <button id="tab-login" type="button" role="tab" aria-selected="true" class="py-3 text-[10px] uppercase tracking-[0.2em] transition-colors">Sign in</button>
+                    <button id="tab-register" type="button" role="tab" aria-selected="false" class="py-3 text-[10px] uppercase tracking-[0.2em] transition-colors">Create account</button>
+                </div>
+
+                <div class="mb-7">
+                    <span id="form-eyebrow" class="text-[10px] uppercase tracking-[0.26em] text-studio-gold block mb-1.5">Welcome back</span>
+                    <h2 id="form-title" class="font-serif text-3xl leading-tight">Sign in to your studio</h2>
+                    <p id="form-subtitle" class="text-xs text-studio-muted font-light leading-relaxed mt-2">Manage collections, uploads and guest activity.</p>
+                </div>
+
+                <form id="auth-form" class="space-y-5" novalidate>
+                    <div id="register-fields" class="hidden space-y-5">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="auth-name" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Your name</label>
+                                <input id="auth-name" name="name" type="text" autocomplete="name" placeholder="Eleanor Vance" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label for="auth-studio" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Studio name</label>
+                                <input id="auth-studio" name="studioName" type="text" autocomplete="organization" placeholder="Natural Studio" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="auth-email" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Email address</label>
+                        <input id="auth-email" name="email" type="email" autocomplete="email" required placeholder="you@studio.com" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="auth-password" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <input id="auth-password" name="password" type="password" autocomplete="current-password" required placeholder="At least 8 characters" class="w-full px-4 py-3 pr-16 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm transition-colors">
+                            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 px-4 text-[10px] uppercase tracking-[0.14em] text-studio-muted hover:text-studio-dark" aria-label="Show password">Show</button>
+                        </div>
+                        <p id="password-hint" class="hidden text-[10px] text-studio-muted mt-1.5 font-light">Use 8 or more characters.</p>
+                    </div>
+
+                    <div id="auth-error" class="hidden p-3.5 text-xs leading-relaxed border bg-red-50 border-red-200 text-red-900"></div>
+
+                    <button id="auth-submit" type="submit" class="w-full bg-studio-dark hover:bg-studio-accent text-studio-bg py-4 px-6 text-[11px] uppercase tracking-[0.22em] transition-colors min-h-[50px] disabled:opacity-50 disabled:cursor-not-allowed">
+                        Sign in &rarr;
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-[11px] text-studio-muted font-light">
+                    <a href="/" class="underline decoration-studio-border underline-offset-4 hover:text-studio-dark transition-colors">Back to guest portal</a>
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="/assets/ui.js"></script>
+<script>
+    const { api, toast } = window.SnapUI;
+
+    const mode = { value: 'login' };
+    const form = document.getElementById('auth-form');
+    const submitBtn = document.getElementById('auth-submit');
+    const errorBox = document.getElementById('auth-error');
+    const registerFields = document.getElementById('register-fields');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const passwordInput = document.getElementById('auth-password');
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordHint = document.getElementById('password-hint');
+
+    const copy = {
+        login: {
+            eyebrow: 'Welcome back',
+            title: 'Sign in to your studio',
+            subtitle: 'Manage collections, uploads and guest activity.',
+            button: 'Sign in &rarr;',
+            passwordHint: 'At least 8 characters'
+        },
+        register: {
+            eyebrow: 'New studio',
+            title: 'Create your account',
+            subtitle: 'Set up a workspace for your collections and guest galleries.',
+            button: 'Create account &rarr;',
+            passwordHint: 'Use 8 or more characters'
+        }
+    };
+
+    function setMode(next) {
+        mode.value = next;
+        const activeClasses = 'bg-studio-dark text-studio-bg';
+        const idleClasses = 'bg-studio-card text-studio-muted hover:text-studio-dark';
+
+        tabLogin.className = `py-3 text-[10px] uppercase tracking-[0.2em] transition-colors ${next === 'login' ? activeClasses : idleClasses}`;
+        tabRegister.className = `py-3 text-[10px] uppercase tracking-[0.2em] transition-colors ${next === 'register' ? activeClasses : idleClasses}`;
+        tabLogin.setAttribute('aria-selected', String(next === 'login'));
+        tabRegister.setAttribute('aria-selected', String(next === 'register'));
+
+        document.getElementById('form-eyebrow').textContent = copy[next].eyebrow;
+        document.getElementById('form-title').textContent = copy[next].title;
+        document.getElementById('form-subtitle').textContent = copy[next].subtitle;
+        submitBtn.innerHTML = copy[next].button;
+        passwordHint.textContent = copy[next].passwordHint;
+        registerFields.classList.toggle('hidden', next !== 'register');
+        passwordInput.autocomplete = next === 'register' ? 'new-password' : 'current-password';
+        errorBox.classList.add('hidden');
+    }
+
+    tabLogin.addEventListener('click', () => setMode('login'));
+    tabRegister.addEventListener('click', () => setMode('register'));
+
+    togglePassword.addEventListener('click', () => {
+        const showing = passwordInput.type === 'text';
+        passwordInput.type = showing ? 'password' : 'text';
+        togglePassword.textContent = showing ? 'Show' : 'Hide';
+        togglePassword.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    });
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.classList.remove('hidden');
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        errorBox.classList.add('hidden');
+
+        const payload = {
+            email: document.getElementById('auth-email').value.trim(),
+            password: passwordInput.value
+        };
+
+        if (mode.value === 'register') {
+            payload.name = document.getElementById('auth-name').value.trim();
+            payload.studioName = document.getElementById('auth-studio').value.trim();
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Please wait&hellip;';
+
+        try {
+            const data = await api(mode.value === 'register' ? '/api/auth/register' : '/api/auth/login', {
+                method: 'POST',
+                body: payload
+            });
+            toast(`Welcome, ${data.photographer.name.split(' ')[0]}.`, 'success');
+            window.location.replace('/dashboard');
+        } catch (error) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = copy[mode.value].button;
+            showError(error.message);
+        }
+    });
+
+    // Already signed in? Go straight to the dashboard.
+    (async () => {
+        try {
+            await api('/api/auth/me');
+            window.location.replace('/dashboard');
+        } catch (error) {
+            // Not signed in; stay here.
+            setMode(window.location.hash === '#register' ? 'register' : 'login');
+        }
+    })();
+</script>
+</body>
+</html>

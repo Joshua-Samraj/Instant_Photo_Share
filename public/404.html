@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not found | Natural Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { studio: { bg: '#FBF9F5', card: '#FFFFFF', border: '#EBE6DE', dark: '#1A1817', muted: '#78736A', accent: '#8C7A6B', gold: '#C5A880', light: '#F4F1EA' } },
+                    fontFamily: { serif: ['"Cormorant Garamond"', 'serif'], sans: ['"Montserrat"', 'sans-serif'] }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-studio-bg font-sans text-studio-dark min-h-screen flex flex-col items-center justify-center px-5">
+    <div class="max-w-md w-full bg-studio-card border border-studio-border p-8 sm:p-10 text-center shadow-[0_20px_60px_rgba(26,24,23,0.05)]">
+        <span class="text-[10px] uppercase tracking-[0.28em] text-studio-gold block mb-4">404</span>
+        <h1 class="font-serif text-4xl leading-tight mb-3">This page has moved on.</h1>
+        <p class="text-xs text-studio-muted font-light leading-relaxed mb-8">The link may be broken, or the collection may have been removed by the studio.</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="/" class="flex-1 px-5 py-3.5 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.18em] transition-colors">Guest portal</a>
+            <a href="/login" class="flex-1 px-5 py-3.5 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.18em] transition-colors">Photographer login</a>
+        </div>
+    </div>
+</body>
+</html>

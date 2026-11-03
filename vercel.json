@@ -1,12 +1,15 @@
 {
-  "rewrites": [
-    { 
-      "source": "/api/:path*", 
-      "destination": "/api/index.js" 
-    },
-    { 
-      "source": "/(.*)", 
-      "destination": "/public/$1" 
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60,
+      "memory": 1024
     }
+  },
+  "rewrites": [
+    { "source": "/e/:eventId", "destination": "/customer.html" },
+    { "source": "/dashboard", "destination": "/photographer.html" },
+    { "source": "/login", "destination": "/login.html" }
   ]
 }

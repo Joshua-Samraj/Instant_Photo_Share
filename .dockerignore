@@ -1,0 +1,9 @@
+node_modules
+.venv_linux
+.git
+.env
+.env.*
+!.env.example
+test.txt
+*.log
+deepface

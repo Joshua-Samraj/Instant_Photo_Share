@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: snapsync-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: run the face service locally.
+  # docker compose --profile ai up -d
+  ai:
+    profiles: ["ai"]
+    build: .
+    container_name: snapsync-ai
+    restart: unless-stopped
+    ports:
+      - "7860:7860"
+    environment:
+      - PYTHON_API_KEY=${PYTHON_API_KEY:-}
+      - FACE_MODEL=ArcFace
+      - FACE_DETECTORS=retinaface,mtcnn,ssd,opencv
+    volumes:
+      - deepface-cache:/user/.deepface
+
+volumes:
+  mongo-data:
+  deepface-cache:

@@ -1,18 +1,32 @@
 {
   "name": "snapsync-backend",
-  "version": "1.0.0",
-  "description": "Instant Facial Recognition Photo Distribution Gateway",
+  "version": "2.0.0",
+  "description": "Instant facial recognition photo distribution gateway",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node scripts/check-syntax.js",
+    "health": "node scripts/healthcheck.js",
+    "setup:pinecone": "node scripts/setup-pinecone.js",
+    "migrate:media": "node scripts/migrate-media.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^6.1.4",
     "axios": "^1.18.1",
+    "bcryptjs": "^3.0.2",
     "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.5.0",
     "multer": "^1.4.5-lts.1"
+  },
+  "overrides": {
+    "qs": "^6.17.1"
   }
 }

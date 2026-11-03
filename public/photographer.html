@@ -3,268 +3,1366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natural Studio | Photographer Archive</title>
+    <title>Studio Dashboard | Natural Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         studio: {
-                            bg: '#FBF9F5',
-                            card: '#FFFFFF',
-                            border: '#EBE6DE',
-                            dark: '#1A1817',
-                            muted: '#78736A',
-                            accent: '#8C7A6B',
-                            gold: '#C5A880',
-                            light: '#F4F1EA'
+                            bg: '#FBF9F5', card: '#FFFFFF', border: '#EBE6DE', dark: '#1A1817',
+                            muted: '#78736A', accent: '#8C7A6B', gold: '#C5A880', light: '#F4F1EA'
                         }
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
-                        sans: ['"Montserrat"', 'sans-serif'],
+                        sans: ['"Montserrat"', 'sans-serif']
                     }
                 }
             }
-        }
+        };
     </script>
+    <style>
+        .fade-in { animation: fadeIn .25s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+        .skeleton { background: linear-gradient(90deg, #f4f1ea 25%, #ebe6de 37%, #f4f1ea 63%); background-size: 400% 100%; animation: shimmer 1.4s infinite; }
+        @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-thumb { background: #ddd5c8; border: 3px solid #fbf9f5; border-radius: 999px; }
+    </style>
 </head>
-<body class="bg-studio-bg font-sans text-studio-dark min-h-screen selection:bg-studio-gold selection:text-white">
+<body class="bg-studio-bg font-sans text-studio-dark min-h-screen">
 
-    <header class="bg-studio-card/80 backdrop-blur-md border-b border-studio-border sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-6 py-6 flex justify-between items-center">
-            <div>
-                <span class="text-[10px] uppercase tracking-[0.3em] text-studio-gold font-semibold block mb-1">Natural Studio Archive</span>
-                <h1 class="text-3xl font-serif tracking-wide text-studio-dark font-normal">Natural STUDIO</h1>
-            </div>
-            <a href="/" class="px-5 py-2.5 border border-studio-border hover:border-studio-dark text-studio-dark rounded-none text-xs tracking-widest uppercase transition-all duration-300 bg-transparent hover:bg-studio-dark hover:text-studio-bg">
-                Client Portal &rarr;
+<!-- Boot state -->
+<div id="app-loading" class="min-h-screen flex flex-col items-center justify-center gap-4">
+    <div class="h-10 w-10 border-2 border-studio-gold border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-[11px] uppercase tracking-[0.24em] text-studio-muted">Loading studio</p>
+</div>
+
+<div id="app-shell" class="hidden min-h-screen lg:grid lg:grid-cols-[260px_1fr]">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col bg-studio-dark text-studio-bg min-h-screen sticky top-0 h-screen">
+        <div class="px-7 py-7 border-b border-studio-bg/10">
+            <a href="#/overview" class="block">
+                <span class="text-[9px] uppercase tracking-[0.3em] text-studio-gold font-semibold block mb-1">Studio Dashboard</span>
+                <span class="text-2xl font-serif tracking-wide">Natural STUDIO</span>
             </a>
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
-        
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div class="lg:col-span-5 bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)] h-fit">
-                <span class="text-[10px] uppercase tracking-[0.25em] text-studio-muted block mb-2">Ingestion Archive</span>
-                <h2 class="text-3xl font-serif text-studio-dark mb-2">Curate Event Pool</h2>
-                <p class="text-xs text-studio-muted leading-relaxed mb-8 font-light">Upload digital negatives and portraits into the facial recognition matrix.</p>
-                
-                <form id="upload-form" class="space-y-6">
+        <nav class="flex-1 px-4 py-6 space-y-1" aria-label="Dashboard">
+            <a href="#/overview" data-nav="overview" class="flex items-center gap-3 px-3.5 py-3 text-[11px] uppercase tracking-[0.16em] border border-transparent transition-colors">
+                <span class="w-4 text-center text-studio-gold">&#9633;</span> Overview
+            </a>
+            <a href="#/collections" data-nav="collections" class="flex items-center gap-3 px-3.5 py-3 text-[11px] uppercase tracking-[0.16em] border border-transparent transition-colors">
+                <span class="w-4 text-center text-studio-gold">&#9707;</span> Collections
+            </a>
+            <a href="#/upload" data-nav="upload" class="flex items-center gap-3 px-3.5 py-3 text-[11px] uppercase tracking-[0.16em] border border-transparent transition-colors">
+                <span class="w-4 text-center text-studio-gold">&#8593;</span> Upload
+            </a>
+            <a href="#/account" data-nav="account" class="flex items-center gap-3 px-3.5 py-3 text-[11px] uppercase tracking-[0.16em] border border-transparent transition-colors">
+                <span class="w-4 text-center text-studio-gold">&#9675;</span> Account
+            </a>
+        </nav>
+
+        <div class="px-6 py-5 border-t border-studio-bg/10">
+            <div class="flex items-center gap-3 mb-4">
+                <span id="sidebar-avatar" class="h-9 w-9 shrink-0 border border-studio-bg/25 text-studio-gold text-xs flex items-center justify-center tracking-wider"></span>
+                <div class="min-w-0">
+                    <p id="sidebar-name" class="text-[12px] font-medium truncate"></p>
+                    <p id="sidebar-studio" class="text-[10px] text-studio-bg/45 truncate"></p>
+                </div>
+            </div>
+            <a href="/" target="_blank" rel="noopener" class="block text-[10px] uppercase tracking-[0.16em] text-studio-bg/55 hover:text-studio-gold transition-colors mb-3">Open guest portal &nearr;</a>
+            <button data-action="logout" class="w-full text-left text-[10px] uppercase tracking-[0.16em] text-studio-bg/55 hover:text-red-300 transition-colors">Sign out</button>
+        </div>
+    </aside>
+
+    <!-- Main column -->
+    <div class="min-w-0 flex flex-col min-h-screen">
+        <header class="bg-studio-card/90 backdrop-blur-md border-b border-studio-border sticky top-0 z-30">
+            <div class="px-4 sm:px-8 py-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3 min-w-0">
+                    <button id="menu-toggle" class="lg:hidden h-10 w-10 border border-studio-border flex items-center justify-center" aria-label="Open navigation">
+                        <span class="block w-4 border-t border-b border-studio-dark py-1"></span>
+                    </button>
+                    <div class="min-w-0">
+                        <p id="page-eyebrow" class="text-[9px] uppercase tracking-[0.26em] text-studio-gold">Studio</p>
+                        <h1 id="page-title" class="font-serif text-xl sm:text-2xl leading-tight truncate">Overview</h1>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="#/upload" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.16em] transition-colors">
+                        + Upload photos
+                    </a>
+                    <a href="#/account" class="h-10 w-10 border border-studio-border bg-studio-card hover:border-studio-dark flex items-center justify-center text-[11px] tracking-wider transition-colors" aria-label="Account">
+                        <span id="topbar-avatar"></span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main id="view" class="flex-grow px-4 sm:px-8 py-6 sm:py-10"></main>
+
+        <footer class="border-t border-studio-border px-4 sm:px-8 py-6 text-[10px] uppercase tracking-[0.18em] text-studio-muted flex flex-col sm:flex-row justify-between gap-2">
+            <span>Natural Studio &copy; 2026</span>
+            <span>Facial recognition delivery &bull; originals stay private</span>
+        </footer>
+    </div>
+</div>
+
+<!-- Mobile drawer -->
+<div id="mobile-drawer" class="fixed inset-0 z-50 hidden lg:hidden">
+    <div class="absolute inset-0 bg-studio-dark/60 backdrop-blur-sm" data-close-drawer></div>
+    <aside class="relative w-[280px] max-w-[82vw] h-full bg-studio-dark text-studio-bg p-6 flex flex-col">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <span class="text-[9px] uppercase tracking-[0.28em] text-studio-gold font-semibold block mb-1">Studio</span>
+                <span class="text-xl font-serif">Natural STUDIO</span>
+            </div>
+            <button data-close-drawer class="h-9 w-9 border border-studio-bg/20 text-xl leading-none" aria-label="Close navigation">&times;</button>
+        </div>
+        <nav class="space-y-1 flex-1">
+            <a href="#/overview" data-mobile-nav="overview" class="block px-3 py-3 text-[11px] uppercase tracking-[0.16em]">Overview</a>
+            <a href="#/collections" data-mobile-nav="collections" class="block px-3 py-3 text-[11px] uppercase tracking-[0.16em]">Collections</a>
+            <a href="#/upload" data-mobile-nav="upload" class="block px-3 py-3 text-[11px] uppercase tracking-[0.16em]">Upload</a>
+            <a href="#/account" data-mobile-nav="account" class="block px-3 py-3 text-[11px] uppercase tracking-[0.16em]">Account</a>
+        </nav>
+        <div class="border-t border-studio-bg/10 pt-4">
+            <p id="mobile-name" class="text-[12px] mb-1"></p>
+            <p id="mobile-studio" class="text-[10px] text-studio-bg/45 mb-3"></p>
+            <button data-action="logout" class="text-[10px] uppercase tracking-[0.16em] text-studio-bg/55 hover:text-red-300">Sign out</button>
+        </div>
+    </aside>
+</div>
+
+<!-- Create collection modal -->
+<div id="modal-create" class="fixed inset-0 z-[60] bg-studio-dark/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-studio-card border border-studio-border w-full max-w-md shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div class="flex items-start justify-between gap-4 p-6 border-b border-studio-border">
+            <div>
+                <span class="text-[9px] uppercase tracking-[0.24em] text-studio-gold block mb-1">New collection</span>
+                <h2 class="font-serif text-2xl leading-tight">Create an event</h2>
+            </div>
+            <button type="button" data-close="modal-create" class="text-studio-muted hover:text-studio-dark text-2xl leading-none px-1" aria-label="Close">&times;</button>
+        </div>
+        <form id="create-form" class="p-6 space-y-5">
+            <div>
+                <label for="create-name" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Collection name</label>
+                <input id="create-name" required maxlength="80" placeholder="The Botanical Wedding" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-base sm:text-sm">
+            </div>
+            <div>
+                <label for="create-code" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Collection code <span class="text-studio-muted normal-case tracking-normal font-light">(optional)</span></label>
+                <input id="create-code" maxlength="40" autocapitalize="none" spellcheck="false" placeholder="botanical-wedding" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold font-mono text-base sm:text-sm">
+                <p class="text-[10px] text-studio-muted font-light mt-1.5">Letters, numbers and dashes. Generated from the name if left blank.</p>
+            </div>
+            <div>
+                <label for="create-date" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Event date <span class="text-studio-muted normal-case tracking-normal font-light">(optional)</span></label>
+                <input id="create-date" type="date" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-base sm:text-sm">
+            </div>
+            <div id="create-error" class="hidden p-3.5 text-xs leading-relaxed border bg-red-50 border-red-200 text-red-900"></div>
+            <div class="flex gap-3 pt-1">
+                <button type="button" data-close="modal-create" class="flex-1 px-4 py-3 border border-studio-border bg-studio-card hover:bg-studio-light text-[10px] uppercase tracking-[0.16em] transition-colors">Cancel</button>
+                <button id="create-btn" type="submit" class="flex-1 px-4 py-3 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.16em] transition-colors">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- QR modal -->
+<div id="modal-qr" class="fixed inset-0 z-[60] bg-studio-dark/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-studio-card border border-studio-border w-full max-w-sm shadow-2xl">
+        <div class="flex items-start justify-between gap-4 p-6 border-b border-studio-border">
+            <div>
+                <span class="text-[9px] uppercase tracking-[0.24em] text-studio-gold block mb-1">Guest share</span>
+                <h2 class="font-serif text-2xl leading-tight">Scan to open</h2>
+            </div>
+            <button type="button" data-close="modal-qr" class="text-studio-muted hover:text-studio-dark text-2xl leading-none px-1" aria-label="Close">&times;</button>
+        </div>
+        <div class="p-6 text-center">
+            <p id="qr-event-name" class="text-[11px] uppercase tracking-[0.18em] text-studio-muted mb-4"></p>
+            <div id="qr-box" class="inline-block p-3 bg-white border border-studio-border"></div>
+            <p id="qr-link" class="mt-4 text-[10px] font-mono text-studio-muted break-all"></p>
+            <div class="grid grid-cols-2 gap-2 mt-5">
+                <button id="qr-copy" type="button" class="px-3 py-2.5 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.14em] transition-colors">Copy link</button>
+                <button id="qr-download" type="button" class="px-3 py-2.5 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.14em] transition-colors">Save QR</button>
+            </div>
+            <a id="qr-open" href="#" target="_blank" rel="noopener" class="block mt-2 px-3 py-2.5 text-[10px] uppercase tracking-[0.14em] text-studio-muted hover:text-studio-dark transition-colors">Open guest view &nearr;</a>
+        </div>
+    </div>
+</div>
+
+<!-- Owner photo viewer -->
+<div id="modal-photo" class="fixed inset-0 z-[60] bg-studio-dark/95 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <div class="h-full flex flex-col">
+        <div class="flex items-center justify-between gap-4 p-4 sm:p-6 text-studio-bg">
+            <div class="min-w-0">
+                <p id="photo-title" class="text-[10px] uppercase tracking-[0.2em] text-studio-bg/60 truncate"></p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <a id="photo-download" href="#" target="_blank" rel="noopener" class="px-4 py-2.5 bg-studio-gold hover:bg-[#d4bb99] text-studio-dark text-[10px] uppercase tracking-[0.14em] transition-colors">Original</a>
+                <button type="button" data-close="modal-photo" class="h-10 w-10 border border-studio-bg/20 hover:bg-studio-bg/10 text-2xl leading-none" aria-label="Close">&times;</button>
+            </div>
+        </div>
+        <div class="flex-grow flex items-center justify-center px-3 sm:px-6 pb-4 min-h-0">
+            <img id="photo-image" alt="Collection photograph" class="max-h-full max-w-full object-contain shadow-2xl">
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="/assets/ui.js"></script>
+<script>
+    const { api, escapeHtml, formatDate, formatDateTime, initials, toast, confirmAction, copyText, compressImage } = window.SnapUI;
+
+    const state = {
+        photographer: null,
+        events: [],
+        route: { name: 'overview', param: null },
+        detail: null,
+        upload: { eventId: null, files: [], running: false },
+        qrEventId: null
+    };
+
+    const els = {
+        loading: document.getElementById('app-loading'),
+        shell: document.getElementById('app-shell'),
+        view: document.getElementById('view'),
+        pageTitle: document.getElementById('page-title'),
+        pageEyebrow: document.getElementById('page-eyebrow')
+    };
+
+    /* ------------------------------------------------------------------ */
+    /* Boot + routing                                                      */
+    /* ------------------------------------------------------------------ */
+
+    async function boot() {
+        try {
+            const data = await api('/api/auth/me');
+            state.photographer = data.photographer;
+        } catch (error) {
+            if (error.status === 401) {
+                window.location.replace('/login');
+                return;
+            }
+            toast(error.message, 'error');
+            els.loading.innerHTML = `<p class="text-sm text-studio-muted px-6 text-center">Could not load your studio. ${escapeHtml(error.message)}</p>`;
+            return;
+        }
+
+        await refreshEvents();
+        els.loading.classList.add('hidden');
+        els.shell.classList.remove('hidden');
+        renderChrome();
+
+        window.addEventListener('hashchange', render);
+        if (!window.location.hash) history.replaceState(null, '', '#/overview');
+        render();
+    }
+
+    async function refreshEvents() {
+        const data = await api('/api/events');
+        state.events = data.events || [];
+        return state.events;
+    }
+
+    function parseRoute() {
+        const raw = window.location.hash.replace(/^#\/?/, '');
+        const [name, param] = raw.split('/');
+        return { name: name || 'overview', param: param ? decodeURIComponent(param) : null };
+    }
+
+    function navigate(hash) {
+        window.location.hash = hash;
+    }
+
+    function showViewLoading() {
+        els.view.innerHTML = `
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                ${[1, 2, 3, 4].map(() => '<div class="h-28 skeleton border border-studio-border"></div>').join('')}
+            </div>
+            <div class="h-64 skeleton border border-studio-border"></div>`;
+    }
+
+    function render() {
+        state.route = parseRoute();
+        closeDrawer();
+        renderChrome();
+
+        if (state.route.name === 'collections') return renderCollections();
+        if (state.route.name === 'collection') return openCollection(state.route.param);
+        if (state.route.name === 'upload') return renderUpload();
+        if (state.route.name === 'account') return renderAccount();
+        return renderOverview();
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Chrome                                                              */
+    /* ------------------------------------------------------------------ */
+
+    function renderChrome() {
+        const name = (state.photographer && state.photographer.name) || '';
+        const studio = (state.photographer && state.photographer.studioName) || '';
+        document.getElementById('sidebar-name').textContent = name;
+        document.getElementById('sidebar-studio').textContent = studio;
+        document.getElementById('mobile-name').textContent = name;
+        document.getElementById('mobile-studio').textContent = studio;
+        const mark = initials(name);
+        document.getElementById('sidebar-avatar').textContent = mark;
+        document.getElementById('topbar-avatar').textContent = mark;
+
+        const routeName = state.route.name === 'collection' ? 'collections' : state.route.name;
+        document.querySelectorAll('[data-nav]').forEach((link) => {
+            const active = link.dataset.nav === routeName;
+            link.className = `flex items-center gap-3 px-3.5 py-3 text-[11px] uppercase tracking-[0.16em] border transition-colors ${
+                active ? 'bg-studio-bg/10 border-studio-bg/10 text-studio-gold' : 'border-transparent text-studio-bg/75 hover:text-studio-bg hover:bg-studio-bg/5'
+            }`;
+        });
+        document.querySelectorAll('[data-mobile-nav]').forEach((link) => {
+            const active = link.dataset.mobileNav === routeName;
+            link.className = `block px-3 py-3 text-[11px] uppercase tracking-[0.16em] border-l-2 ${
+                active ? 'border-studio-gold text-studio-gold' : 'border-transparent text-studio-bg/75'
+            }`;
+        });
+
+        const titles = {
+            overview: ['Studio', 'Overview'],
+            collections: ['Archive', 'Collections'],
+            upload: ['Ingest', 'Upload photographs'],
+            account: ['Settings', 'Account'],
+            collection: ['Collection', 'Details']
+        };
+        const [eyebrow, title] = titles[state.route.name] || titles.overview;
+        els.pageEyebrow.textContent = eyebrow;
+        if (state.route.name !== 'collection') els.pageTitle.textContent = title;
+    }
+
+    function closeDrawer() {
+        document.getElementById('mobile-drawer').classList.add('hidden');
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Overview                                                            */
+    /* ------------------------------------------------------------------ */
+
+    function renderOverview() {
+        const totals = state.events.reduce((acc, event) => ({
+            photos: acc.photos + (event.photoCount || 0),
+            guests: acc.guests + (event.customerCount || 0),
+            matches: acc.matches + (event.matchSearches || 0)
+        }), { photos: 0, guests: 0, matches: 0 });
+
+        const recent = state.events.slice(0, 4);
+        const first = (state.photographer.name || '').split(' ')[0];
+
+        els.view.innerHTML = `
+            <div class="fade-in space-y-8">
+                <section class="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
                     <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Collection Identifier</label>
-                        <input type="text" id="upload-event-id" placeholder="e.g., atelier_2026" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-xs tracking-wider transition-colors">
+                        <p class="text-[10px] uppercase tracking-[0.24em] text-studio-muted mb-2">Welcome back, ${escapeHtml(first)}</p>
+                        <h2 class="font-serif text-3xl sm:text-4xl leading-tight">Your studio at a glance.</h2>
+                        <p class="text-xs sm:text-[13px] text-studio-muted font-light leading-relaxed mt-2 max-w-xl">Create a collection, upload the full shoot, and share one link. Guests self-serve their own photographs.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2.5">
+                        <button data-action="create-event" class="px-5 py-3 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.18em] transition-colors min-h-[44px]">+ New collection</button>
+                        <a href="#/upload" class="px-5 py-3 border border-studio-border hover:border-studio-dark bg-studio-card text-[10px] uppercase tracking-[0.18em] transition-colors min-h-[44px] inline-flex items-center">Upload photos</a>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    ${statCard('Collections', state.events.length, 'active archives')}
+                    ${statCard('Photographs', totals.photos, 'indexed frames')}
+                    ${statCard('Guests', totals.guests, 'registered visitors')}
+                    ${statCard('Match sessions', totals.matches, 'selfie searches')}
+                </section>
+
+                <section class="grid lg:grid-cols-[1.45fr_1fr] gap-6">
+                    <div class="bg-studio-card border border-studio-border">
+                        <div class="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-studio-border">
+                            <div>
+                                <span class="text-[9px] uppercase tracking-[0.22em] text-studio-muted block mb-0.5">Recent</span>
+                                <h3 class="font-serif text-2xl leading-none">Collections</h3>
+                            </div>
+                            <a href="#/collections" class="text-[10px] uppercase tracking-[0.16em] text-studio-muted hover:text-studio-dark transition-colors">View all &rarr;</a>
+                        </div>
+                        ${recent.length === 0 ? emptyBlock('No collections yet', 'Create your first collection to start uploading photographs.', 'create-event', 'Create a collection') : `
+                        <div class="divide-y divide-studio-border">
+                            ${recent.map((event) => `
+                                <a href="#/collection/${encodeURIComponent(event.eventId)}" class="flex items-center gap-4 px-5 sm:px-6 py-4 hover:bg-studio-bg transition-colors group">
+                                    <span class="h-11 w-11 shrink-0 bg-studio-dark text-studio-gold font-serif text-xl flex items-center justify-center">${escapeHtml(event.name.charAt(0).toUpperCase())}</span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block font-serif text-lg leading-tight truncate group-hover:text-studio-accent transition-colors">${escapeHtml(event.name)}</span>
+                                        <span class="block text-[10px] font-mono text-studio-muted mt-0.5 truncate">${escapeHtml(event.eventId)}</span>
+                                    </span>
+                                    <span class="hidden sm:flex flex-col items-end text-[10px] uppercase tracking-[0.12em] text-studio-muted gap-0.5">
+                                        <span>${event.photoCount} photos</span>
+                                        <span>${event.customerCount} guests</span>
+                                    </span>
+                                    <span class="text-studio-muted group-hover:text-studio-dark transition-colors">&rarr;</span>
+                                </a>`).join('')}
+                        </div>`}
+                    </div>
+
+                    <div class="bg-studio-dark text-studio-bg p-6 sm:p-7 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[9px] uppercase tracking-[0.24em] text-studio-gold block mb-3">Guest experience</span>
+                            <h3 class="font-serif text-2xl sm:text-3xl leading-tight mb-3">One code. Every photo of them.</h3>
+                            <p class="text-[12px] text-studio-bg/60 font-light leading-relaxed">Share the collection link or QR code. Guests register, take a selfie, and receive watermarked previews in seconds.</p>
+                        </div>
+                        <div class="mt-8">
+                            <div class="border border-studio-bg/15 bg-studio-bg/5 p-4 mb-4">
+                                <p class="text-[9px] uppercase tracking-[0.18em] text-studio-bg/40 mb-2">Their flow</p>
+                                <div class="flex items-center gap-2 text-[10px] uppercase tracking-[0.1em] text-studio-bg/75 flex-wrap">
+                                    <span>Code</span><span class="text-studio-gold">&rarr;</span>
+                                    <span>Details</span><span class="text-studio-gold">&rarr;</span>
+                                    <span>Selfie</span><span class="text-studio-gold">&rarr;</span>
+                                    <span>Gallery</span>
+                                </div>
+                            </div>
+                            ${state.events.length > 0 ? `
+                            <button data-action="show-qr" data-event="${escapeHtml(state.events[0].eventId)}" class="w-full px-4 py-3 bg-studio-gold hover:bg-[#d4bb99] text-studio-dark text-[10px] uppercase tracking-[0.16em] transition-colors">Share latest collection QR</button>` : `
+                            <button data-action="create-event" class="w-full px-4 py-3 bg-studio-gold hover:bg-[#d4bb99] text-studio-dark text-[10px] uppercase tracking-[0.16em] transition-colors">Create your first collection</button>`}
+                        </div>
+                    </div>
+                </section>
+            </div>`;
+    }
+
+    function statCard(label, value, hint) {
+        return `
+            <div class="bg-studio-card border border-studio-border p-4 sm:p-5">
+                <span class="text-[9px] uppercase tracking-[0.2em] text-studio-muted block mb-2">${escapeHtml(label)}</span>
+                <span class="font-serif text-3xl sm:text-4xl leading-none block">${Number(value || 0).toLocaleString()}</span>
+                <span class="text-[10px] text-studio-muted font-light block mt-1">${escapeHtml(hint)}</span>
+            </div>`;
+    }
+
+    function emptyBlock(title, message, action, actionLabel) {
+        return `
+            <div class="flex flex-col items-center justify-center text-center px-6 py-14">
+                <span class="font-serif text-5xl text-studio-border leading-none mb-4">&#10022;</span>
+                <p class="font-serif text-xl mb-1.5">${escapeHtml(title)}</p>
+                <p class="text-[11px] text-studio-muted font-light leading-relaxed max-w-xs mb-5">${escapeHtml(message)}</p>
+                ${action ? `<button data-action="${action}" class="px-4 py-2.5 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.16em] transition-colors">${escapeHtml(actionLabel)}</button>` : ''}
+            </div>`;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Collections                                                         */
+    /* ------------------------------------------------------------------ */
+
+    function renderCollections() {
+        els.view.innerHTML = `
+            <div class="fade-in space-y-7">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.24em] text-studio-muted mb-2">Archive</p>
+                        <h2 class="font-serif text-3xl sm:text-4xl leading-tight">Your collections.</h2>
+                        <p class="text-xs text-studio-muted font-light mt-2">Each collection has its own guest link, QR code and photo index.</p>
+                    </div>
+                    <button data-action="create-event" class="px-5 py-3 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.18em] transition-colors min-h-[44px]">+ New collection</button>
+                </div>
+
+                ${state.events.length === 0 ? `
+                <div class="bg-studio-card border border-studio-border">
+                    ${emptyBlock('No collections yet', 'Create a collection, then upload the shoot. Guests will use the collection link to find themselves.', 'create-event', 'Create your first collection')}
+                </div>` : `
+                <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    ${state.events.map(eventCard).join('')}
+                </div>`}
+            </div>`;
+    }
+
+    function eventCard(event) {
+        return `
+            <article class="bg-studio-card border border-studio-border flex flex-col group">
+                <div class="p-5 sm:p-6 flex-grow">
+                    <div class="flex items-start justify-between gap-3 mb-5">
+                        <span class="h-11 w-11 bg-studio-dark text-studio-gold font-serif text-xl flex items-center justify-center shrink-0">${escapeHtml(event.name.charAt(0).toUpperCase())}</span>
+                        <span class="text-[9px] uppercase tracking-[0.16em] px-2 py-1 border ${event.active ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-studio-border bg-studio-bg text-studio-muted'}">${event.active ? 'Live' : 'Paused'}</span>
+                    </div>
+                    <h3 class="font-serif text-2xl leading-tight group-hover:text-studio-accent transition-colors">${escapeHtml(event.name)}</h3>
+                    <p class="text-[10px] font-mono text-studio-muted mt-1 truncate">${escapeHtml(event.eventId)}</p>
+                    <p class="text-[10px] uppercase tracking-[0.14em] text-studio-accent mt-3">${event.eventDate ? escapeHtml(formatDate(event.eventDate)) : 'No event date'}</p>
+
+                    <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-studio-border">
+                        <div>
+                            <span class="block font-serif text-xl leading-none">${event.photoCount || 0}</span>
+                            <span class="block text-[9px] uppercase tracking-[0.12em] text-studio-muted mt-1">Photos</span>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-xl leading-none">${event.customerCount || 0}</span>
+                            <span class="block text-[9px] uppercase tracking-[0.12em] text-studio-muted mt-1">Guests</span>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-xl leading-none">${event.matchSearches || 0}</span>
+                            <span class="block text-[9px] uppercase tracking-[0.12em] text-studio-muted mt-1">Matches</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-studio-border px-5 sm:px-6 py-3 flex items-center gap-1.5">
+                    <a href="#/collection/${encodeURIComponent(event.eventId)}" class="flex-1 text-center px-3 py-2 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[9px] uppercase tracking-[0.14em] transition-colors min-h-[38px] inline-flex items-center justify-center">Open</a>
+                    <button data-action="copy-link" data-url="${escapeHtml(event.shareUrl)}" title="Copy guest link" class="h-[38px] w-[38px] border border-studio-border hover:bg-studio-light flex items-center justify-center text-sm" aria-label="Copy guest link">&#128279;</button>
+                    <button data-action="show-qr" data-event="${escapeHtml(event.eventId)}" title="Show QR code" class="h-[38px] w-[38px] border border-studio-border hover:bg-studio-light flex items-center justify-center text-sm" aria-label="Show QR code">&#9635;</button>
+                    <button data-action="delete-event" data-event="${escapeHtml(event.eventId)}" data-name="${escapeHtml(event.name)}" title="Delete collection" class="h-[38px] w-[38px] border border-studio-border hover:bg-red-50 hover:border-red-200 text-studio-muted hover:text-red-700 flex items-center justify-center text-sm" aria-label="Delete collection">&times;</button>
+                </div>
+            </article>`;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Collection detail                                                   */
+    /* ------------------------------------------------------------------ */
+
+    async function openCollection(eventId, tab = 'photos', page = 1) {
+        if (!eventId) return navigate('#/collections');
+        showViewLoading();
+
+        try {
+            const [eventData, photosData] = await Promise.all([
+                api(`/api/events/${encodeURIComponent(eventId)}`),
+                tab === 'photos' ? api(`/api/events/${encodeURIComponent(eventId)}/photos?page=${page}&limit=60`) : Promise.resolve(null)
+            ]);
+
+            const detail = {
+                event: eventData.event,
+                tab,
+                photos: photosData ? photosData.photos : [],
+                photoTotal: photosData ? photosData.total : 0,
+                page: photosData ? photosData.page : 1,
+                pages: photosData ? photosData.pages : 1,
+                customers: null,
+                matches: null
+            };
+
+            if (tab === 'guests') {
+                detail.customers = (await api(`/api/events/${encodeURIComponent(eventId)}/customers`)).customers;
+            }
+            if (tab === 'activity') {
+                detail.matches = (await api(`/api/events/${encodeURIComponent(eventId)}/matches`)).matches;
+            }
+
+            state.detail = detail;
+            const index = state.events.findIndex((item) => item.eventId === eventId);
+            if (index >= 0) state.events[index] = { ...state.events[index], ...eventData.event };
+            else state.events.unshift(eventData.event);
+
+            els.pageTitle.textContent = eventData.event.name;
+            els.pageEyebrow.textContent = 'Collection';
+            renderCollectionDetail();
+        } catch (error) {
+            toast(error.message, 'error');
+            els.view.innerHTML = errorState(error.message, '#/collections');
+        }
+    }
+
+    function renderCollectionDetail() {
+        if (!state.detail) return;
+        const { event, tab, photos, photoTotal, page, pages } = state.detail;
+
+        els.view.innerHTML = `
+            <div class="fade-in space-y-6">
+                <a href="#/collections" class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-studio-muted hover:text-studio-dark transition-colors">&larr; All collections</a>
+
+                <section class="bg-studio-card border border-studio-border">
+                    <div class="p-5 sm:p-7 flex flex-col xl:flex-row xl:items-start justify-between gap-6">
+                        <div class="min-w-0">
+                            <div class="flex flex-wrap items-center gap-2.5 mb-2">
+                                <span class="text-[9px] uppercase tracking-[0.16em] px-2 py-1 border ${event.active ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-studio-border bg-studio-bg text-studio-muted'}">${event.active ? 'Live' : 'Paused'}</span>
+                                <span class="text-[10px] font-mono text-studio-muted">${escapeHtml(event.eventId)}</span>
+                            </div>
+                            <h2 class="font-serif text-3xl sm:text-4xl leading-tight">${escapeHtml(event.name)}</h2>
+                            <p class="text-[10px] uppercase tracking-[0.14em] text-studio-accent mt-2">${event.eventDate ? escapeHtml(formatDate(event.eventDate)) : 'No event date'} &bull; ${event.photoCount} photos &bull; ${event.customerCount} guests</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <button data-action="copy-link" data-url="${escapeHtml(event.shareUrl)}" class="px-4 py-2.5 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.14em] transition-colors min-h-[40px]">Copy guest link</button>
+                            <button data-action="show-qr" data-event="${escapeHtml(event.eventId)}" class="px-4 py-2.5 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.14em] transition-colors min-h-[40px]">QR code</button>
+                            <a href="#/upload" data-action="upload-to" data-event="${escapeHtml(event.eventId)}" class="px-4 py-2.5 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.14em] transition-colors min-h-[40px] inline-flex items-center">Upload photos</a>
+                            <button data-action="toggle-active" data-event="${escapeHtml(event.eventId)}" data-active="${event.active ? '0' : '1'}" class="px-4 py-2.5 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.14em] transition-colors min-h-[40px]">${event.active ? 'Pause' : 'Reopen'}</button>
+                            <button data-action="delete-event" data-event="${escapeHtml(event.eventId)}" data-name="${escapeHtml(event.name)}" class="px-4 py-2.5 border border-studio-border hover:bg-red-50 hover:border-red-200 hover:text-red-700 text-studio-muted text-[10px] uppercase tracking-[0.14em] transition-colors min-h-[40px]">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-studio-border px-5 sm:px-7 flex gap-1 overflow-x-auto">
+                        ${detailTab('photos', 'Photographs', ` (${photoTotal})`, tab)}
+                        ${detailTab('guests', 'Guests', ` (${event.customerCount || 0})`, tab)}
+                        ${detailTab('activity', 'Match activity', '', tab)}
+                    </div>
+                </section>
+
+                ${tab === 'photos' ? renderDetailPhotos() : ''}
+                ${tab === 'guests' ? renderDetailGuests() : ''}
+                ${tab === 'activity' ? renderDetailActivity() : ''}
+            </div>`;
+    }
+
+    function detailTab(key, label, suffix, activeTab) {
+        const active = key === activeTab;
+        return `<button data-action="detail-tab" data-tab="${key}" class="px-4 py-3.5 text-[10px] uppercase tracking-[0.16em] border-b-2 whitespace-nowrap transition-colors ${
+            active ? 'border-studio-dark text-studio-dark' : 'border-transparent text-studio-muted hover:text-studio-dark'
+        }">${escapeHtml(label)}${suffix}</button>`;
+    }
+
+    function renderDetailPhotos() {
+        const { photos, page, pages, photoTotal } = state.detail;
+        if (photos.length === 0) {
+            return `<div class="bg-studio-card border border-studio-border">${emptyBlock('No photographs indexed', 'Upload the shoot to this collection and the index will build automatically.', 'upload-to', 'Upload photos').replace('data-action="upload-to"', `data-action="upload-to" data-event="${escapeHtml(state.detail.event.eventId)}"`)}</div>`;
+        }
+
+        return `
+            <section class="space-y-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+                    ${photos.map((photo, index) => `
+                        <div class="group relative bg-studio-card border border-studio-border overflow-hidden">
+                            <button type="button" data-action="view-photo" data-index="${index}" class="block w-full aspect-[4/5] bg-studio-bg focus:outline-none focus:ring-2 focus:ring-studio-gold">
+                                <img src="${escapeHtml(photo.thumbUrl)}" alt="Photograph ${index + 1}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
+                            </button>
+                            <div class="absolute inset-x-0 top-0 flex items-center justify-between p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-b from-studio-dark/60 to-transparent">
+                                <span class="text-[8px] uppercase tracking-[0.12em] text-studio-bg/90">${photo.facesCount || 0} face${photo.facesCount === 1 ? '' : 's'}</span>
+                                <span class="text-[8px] uppercase tracking-[0.12em] ${photo.indexed ? 'text-emerald-200' : 'text-amber-200'}">${photo.indexed ? 'Indexed' : 'Not indexed'}</span>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 flex items-center justify-end gap-1 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-studio-dark/70 to-transparent">
+                                ${!photo.indexed ? `<button data-action="reindex-photo" data-image="${escapeHtml(photo.imageId)}" title="Retry indexing" class="h-8 px-2 bg-studio-gold text-studio-dark text-[8px] uppercase tracking-[0.1em]">Retry</button>` : ''}
+                                <button data-action="delete-photo" data-image="${escapeHtml(photo.imageId)}" title="Delete photo" class="h-8 w-8 bg-studio-dark/80 hover:bg-red-700 text-studio-bg text-sm flex items-center justify-center" aria-label="Delete photo">&times;</button>
+                            </div>
+                        </div>`).join('')}
+                </div>
+
+                <div class="flex items-center justify-between gap-4 pt-2">
+                    <p class="text-[10px] uppercase tracking-[0.14em] text-studio-muted">Page ${page} of ${pages} &bull; ${photoTotal} photographs</p>
+                    <div class="flex gap-2">
+                        <button data-action="detail-page" data-page="${page - 1}" ${page <= 1 ? 'disabled' : ''} class="px-4 py-2 border border-studio-border text-[10px] uppercase tracking-[0.14em] disabled:opacity-30 hover:bg-studio-light transition-colors">Previous</button>
+                        <button data-action="detail-page" data-page="${page + 1}" ${page >= pages ? 'disabled' : ''} class="px-4 py-2 border border-studio-border text-[10px] uppercase tracking-[0.14em] disabled:opacity-30 hover:bg-studio-light transition-colors">Next</button>
+                    </div>
+                </div>
+            </section>`;
+    }
+
+    function renderDetailGuests() {
+        const customers = state.detail.customers || [];
+        if (customers.length === 0) {
+            return `<div class="bg-studio-card border border-studio-border">${emptyBlock('No guests yet', 'Share the collection link or QR code. Guests appear here as soon as they register.', 'copy-link', 'Copy guest link').replace('data-action="copy-link"', `data-action="copy-link" data-url="${escapeHtml(state.detail.event.shareUrl)}"`)}</div>`;
+        }
+
+        return `
+            <section class="bg-studio-card border border-studio-border">
+                <div class="p-4 sm:p-5 border-b border-studio-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <p class="text-[10px] uppercase tracking-[0.16em] text-studio-muted">${customers.length} registered guest${customers.length === 1 ? '' : 's'}</p>
+                    <input id="guest-search" type="search" placeholder="Search name or phone…" class="w-full sm:w-64 px-3 py-2.5 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-xs">
+                </div>
+                <div id="guest-list" class="divide-y divide-studio-border">
+                    ${customers.map((customer) => `
+                        <div class="guest-row flex items-center justify-between gap-4 px-4 sm:px-5 py-3.5" data-search="${escapeHtml((customer.name + ' ' + customer.phone).toLowerCase())}">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <span class="h-9 w-9 shrink-0 bg-studio-bg border border-studio-border text-[10px] flex items-center justify-center tracking-wider">${escapeHtml(initials(customer.name))}</span>
+                                <div class="min-w-0">
+                                    <p class="text-[13px] font-medium truncate">${escapeHtml(customer.name)}</p>
+                                    <p class="text-[10px] text-studio-muted font-mono truncate">${escapeHtml(customer.phone)}</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] uppercase tracking-[0.12em] text-studio-muted whitespace-nowrap">${escapeHtml(formatDate(customer.registeredAt))}</span>
+                        </div>`).join('')}
+                </div>
+            </section>`;
+    }
+
+    function renderDetailActivity() {
+        const matches = state.detail.matches || [];
+        if (matches.length === 0) {
+            return `<div class="bg-studio-card border border-studio-border">${emptyBlock('No match activity', 'Match sessions appear here when guests scan their selfies against this collection.', '', '')}</div>`;
+        }
+
+        return `
+            <section class="bg-studio-card border border-studio-border">
+                <div class="px-4 sm:px-5 py-4 border-b border-studio-border">
+                    <p class="text-[10px] uppercase tracking-[0.16em] text-studio-muted">Last ${matches.length} match sessions</p>
+                </div>
+                <div class="divide-y divide-studio-border">
+                    ${matches.map((match) => `
+                        <div class="flex items-center justify-between gap-4 px-4 sm:px-5 py-3.5">
+                            <div class="min-w-0">
+                                <p class="text-[13px] font-medium truncate">${escapeHtml(match.customerName || 'Guest')}</p>
+                                <p class="text-[10px] text-studio-muted">${escapeHtml(formatDateTime(match.createdAt))}</p>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-[0.14em] ${match.photoCount > 0 ? 'text-emerald-700' : 'text-studio-muted'}">${match.photoCount} photo${match.photoCount === 1 ? '' : 's'}</span>
+                        </div>`).join('')}
+                </div>
+            </section>`;
+    }
+
+    function errorState(message, backHash) {
+        return `
+            <div class="bg-studio-card border border-studio-border max-w-lg mx-auto mt-10 p-8 text-center">
+                <span class="font-serif text-4xl text-studio-border block mb-4">&#10005;</span>
+                <h2 class="font-serif text-2xl mb-2">Something went wrong</h2>
+                <p class="text-xs text-studio-muted font-light leading-relaxed mb-6">${escapeHtml(message)}</p>
+                <a href="${backHash}" class="inline-block px-5 py-3 bg-studio-dark text-studio-bg text-[10px] uppercase tracking-[0.16em]">Go back</a>
+            </div>`;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Upload                                                              */
+    /* ------------------------------------------------------------------ */
+
+    function renderUpload() {
+        const selectedId = state.upload.eventId && state.events.some((event) => event.eventId === state.upload.eventId)
+            ? state.upload.eventId
+            : (state.events[0] && state.events[0].eventId) || '';
+
+        if (state.events.length === 0) {
+            els.view.innerHTML = `
+                <div class="fade-in bg-studio-card border border-studio-border max-w-xl mx-auto mt-6">
+                    ${emptyBlock('Create a collection first', 'Photographs belong to a collection so guests can receive the right gallery.', 'create-event', 'Create a collection')}
+                </div>`;
+            return;
+        }
+
+        els.view.innerHTML = `
+            <div class="fade-in max-w-4xl mx-auto space-y-6">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-studio-muted mb-2">Ingest</p>
+                    <h2 class="font-serif text-3xl sm:text-4xl leading-tight">Upload the shoot.</h2>
+                    <p class="text-xs text-studio-muted font-light mt-2 max-w-xl">Images are compressed in your browser, stored in Cloudinary, then indexed by face. Keep this tab open until indexing finishes.</p>
+                </div>
+
+                <section class="bg-studio-card border border-studio-border p-5 sm:p-7 space-y-6">
+                    <div>
+                        <label for="upload-event" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Collection</label>
+                        <div class="flex gap-2">
+                            <select id="upload-event" class="flex-1 px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm">
+                                ${state.events.map((event) => `<option value="${escapeHtml(event.eventId)}" ${event.eventId === selectedId ? 'selected' : ''}>${escapeHtml(event.name)} — ${escapeHtml(event.eventId)}</option>`).join('')}
+                            </select>
+                            <button data-action="create-event" type="button" class="px-4 py-3 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.14em] whitespace-nowrap transition-colors">New</button>
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Collection Display Title</label>
-                        <input type="text" id="upload-event-name" placeholder="e.g., The Botanical Wedding" required class="w-full px-4 py-3 bg-studio-bg border border-studio-border rounded-none focus:outline-none focus:border-studio-gold text-xs tracking-wider transition-colors">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-studio-dark font-medium mb-2">Select Digital Assets</label>
-                        <label class="flex flex-col items-center justify-center py-8 px-4 bg-studio-bg hover:bg-studio-light text-studio-dark font-normal border border-dashed border-studio-gold/60 cursor-pointer transition-colors group">
-                            <span class="text-xl mb-1 text-studio-gold">&plus;</span>
-                            <span class="text-xs tracking-widest uppercase text-studio-dark group-hover:text-studio-gold transition-colors">Select Portfolio Files</span>
-                            <span class="text-[10px] text-studio-muted mt-1 font-light">High-resolution JPEG or PNG format</span>
-                            <input type="file" id="upload-file-input" accept="image/*" multiple class="hidden">
+                        <span class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Photographs</span>
+                        <label id="dropzone" class="flex flex-col items-center justify-center text-center px-5 py-10 sm:py-14 bg-studio-bg hover:bg-studio-light border border-dashed border-studio-border cursor-pointer transition-colors">
+                            <span class="h-11 w-11 border border-studio-border bg-studio-card flex items-center justify-center text-studio-gold text-xl mb-4">+</span>
+                            <span class="text-[11px] uppercase tracking-[0.16em]">Drop photographs or browse</span>
+                            <span class="text-[10px] text-studio-muted font-light mt-2">JPEG, PNG or WebP &bull; up to 30 at a time &bull; compressed automatically</span>
+                            <input id="upload-files" type="file" accept="image/*" multiple class="hidden">
                         </label>
                     </div>
 
-                    <div id="upload-preview-container" class="hidden border border-studio-border p-4 bg-studio-bg">
-                        <p id="upload-count-text" class="text-[10px] uppercase tracking-widest text-studio-dark font-medium mb-3"></p>
-                        <div id="upload-preview-grid" class="grid grid-cols-4 gap-3 max-h-40 overflow-y-auto"></div>
+                    <div id="file-list" class="hidden">
+                        <div class="flex items-center justify-between mb-2">
+                            <p id="file-count" class="text-[10px] uppercase tracking-[0.16em] text-studio-muted"></p>
+                            <button id="clear-files" type="button" class="text-[10px] uppercase tracking-[0.14em] text-studio-muted hover:text-red-700 transition-colors">Clear all</button>
+                        </div>
+                        <div id="file-grid" class="grid grid-cols-3 sm:grid-cols-5 gap-2.5"></div>
                     </div>
 
-                    <button type="submit" id="index-btn" class="w-full bg-studio-dark hover:bg-studio-accent text-studio-bg font-normal py-4 px-6 tracking-[0.2em] text-xs uppercase transition-all duration-300 disabled:opacity-30 disabled:hover:bg-studio-dark" disabled>
-                        Process &amp; Index Matrix
-                    </button>
-                </form>
+                    <div id="upload-progress" class="hidden">
+                        <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-studio-muted mb-2">
+                            <span id="progress-label">Preparing…</span>
+                            <span id="progress-value">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-studio-light border border-studio-border overflow-hidden">
+                            <div id="progress-bar" class="h-full bg-studio-gold transition-all duration-300" style="width:0%"></div>
+                        </div>
+                    </div>
 
-                <div id="upload-status" class="mt-6 hidden p-4 text-xs tracking-wide font-light border"></div>
-            </div>
+                    <div id="upload-error" class="hidden p-3.5 text-xs leading-relaxed border bg-red-50 border-red-200 text-red-900"></div>
 
-            <div class="lg:col-span-7 bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)]">
-                <div class="border-b border-studio-border pb-6 mb-6">
-                    <span class="text-[10px] uppercase tracking-[0.25em] text-studio-muted block mb-1">Session Display</span>
-                    <h3 class="text-3xl font-serif text-studio-dark">Processed Photographs</h3>
-                </div>
-                <div id="photographer-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-6 min-h-[350px] items-center justify-center bg-studio-bg border border-studio-border p-6">
-                    <p id="empty-upload-msg" class="col-span-full text-center text-xs tracking-widest uppercase text-studio-muted font-light">No photographs indexed in this session</p>
-                </div>
-            </div>
-        </div>
+                    <button id="upload-btn" type="button" disabled class="w-full px-6 py-4 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[11px] uppercase tracking-[0.2em] transition-colors min-h-[52px] disabled:opacity-35 disabled:cursor-not-allowed">Upload &amp; index photographs</button>
 
-        <div class="bg-studio-card p-8 border border-studio-border shadow-[0_10px_40px_rgba(0,0,0,0.02)]">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-studio-border pb-6 mb-8 gap-4">
-                <div>
-                    <span class="text-[10px] uppercase tracking-[0.25em] text-studio-gold font-semibold block mb-1">Intelligence Database</span>
-                    <h3 class="text-3xl font-serif text-studio-dark">Archival Collections &amp; Access Logs</h3>
-                </div>
-                <button onclick="loadEvents()" class="px-5 py-2.5 bg-studio-bg hover:bg-studio-light border border-studio-border text-studio-dark text-xs tracking-widest uppercase transition-colors">
-                    Refresh Matrix
-                </button>
-            </div>
+                    <p class="text-[10px] text-studio-muted font-light leading-relaxed">Originals stay private. Guests only ever receive watermarked previews; you can download originals from the collection view.</p>
+                </section>
+            </div>`;
 
-            <div id="events-list" class="space-y-8">
-                <p class="text-center text-xs tracking-widest uppercase text-studio-muted py-12 font-light">Synchronizing archive records...</p>
-            </div>
-        </div>
+        bindUpload();
+    }
 
-    </main>
+    function bindUpload() {
+        const select = document.getElementById('upload-event');
+        const input = document.getElementById('upload-files');
+        const dropzone = document.getElementById('dropzone');
+        const fileList = document.getElementById('file-list');
+        const fileGrid = document.getElementById('file-grid');
+        const fileCount = document.getElementById('file-count');
+        const uploadBtn = document.getElementById('upload-btn');
+        const progress = document.getElementById('upload-progress');
+        const progressBar = document.getElementById('progress-bar');
+        const progressLabel = document.getElementById('progress-label');
+        const progressValue = document.getElementById('progress-value');
+        const uploadError = document.getElementById('upload-error');
 
-    <footer class="border-t border-studio-border mt-20 py-12 text-center text-studio-muted text-xs tracking-widest uppercase font-light">
-        Natural Natural Studio &copy; 2026 &bull; Facial Recognition Distribution Architecture
-    </footer>
+        state.upload.eventId = select.value;
 
-    <script>
-        async function parseResponseSafe(response) {
-            const text = await response.text();
-            if (!text) throw new Error("Empty response from server.");
-            try { return JSON.parse(text); } catch (err) { throw new Error(`Invalid response: ${text.slice(0, 80)}`); }
-        }
-
-        async function uploadBatchToServer(files) {
-            const formData = new FormData();
-            Array.from(files).forEach(file => formData.append('images', file));
-            const res = await fetch('/api/upload-storage', { method: 'POST', body: formData });
-            const data = await parseResponseSafe(res);
-            if (!res.ok || !data.success) throw new Error(data.error || "Failed to store images.");
-            return data.urls;
-        }
-
-        let currentPhotographerFiles = [];
-        const uploadForm = document.getElementById('upload-form');
-        const uploadFileInput = document.getElementById('upload-file-input');
-        const uploadPreviewContainer = document.getElementById('upload-preview-container');
-        const uploadPreviewGrid = document.getElementById('upload-preview-grid');
-        const uploadCountText = document.getElementById('upload-count-text');
-        const uploadStatus = document.getElementById('upload-status');
-        const photographerGallery = document.getElementById('photographer-gallery');
-        const emptyUploadMsg = document.getElementById('empty-upload-msg');
-        const indexBtn = document.getElementById('index-btn');
-
-        uploadFileInput.addEventListener('change', (e) => {
-            currentPhotographerFiles = Array.from(e.target.files);
-            uploadPreviewGrid.innerHTML = '';
-            if (currentPhotographerFiles.length > 0) {
-                uploadCountText.textContent = `${currentPhotographerFiles.length} asset(s) staged for indexing`;
-                currentPhotographerFiles.slice(0, 8).forEach(file => {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.className = "w-full h-16 object-cover border border-studio-border";
-                    uploadPreviewGrid.appendChild(img);
-                });
-                uploadPreviewContainer.classList.remove('hidden');
-                indexBtn.disabled = false;
-            } else {
-                uploadPreviewContainer.classList.add('hidden');
-                indexBtn.disabled = true;
-            }
+        select.addEventListener('change', () => {
+            state.upload.eventId = select.value;
         });
 
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const eventId = document.getElementById('upload-event-id').value.trim();
-            const eventName = document.getElementById('upload-event-name').value.trim();
-            if (currentPhotographerFiles.length === 0) return;
+        function addFiles(fileListInput) {
+            const incoming = Array.from(fileListInput).filter((file) => file.type && file.type.startsWith('image/'));
+            if (incoming.length === 0) {
+                toast('Please choose image files.', 'error');
+                return;
+            }
+            const room = 30 - state.upload.files.length;
+            if (room <= 0) {
+                toast('You can stage up to 30 photographs at a time.', 'error');
+                return;
+            }
+            incoming.slice(0, room).forEach((file) => {
+                state.upload.files.push({
+                    file,
+                    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                    preview: URL.createObjectURL(file),
+                    status: 'ready'
+                });
+            });
+            if (incoming.length > room) toast(`Only ${room} more could be added (30 max).`, 'info');
+            renderFiles();
+        }
 
-            indexBtn.disabled = true;
-            uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-bg border-studio-gold text-studio-dark block";
-            uploadStatus.textContent = `Phase 1/2: Transferring ${currentPhotographerFiles.length} asset(s) to cloud storage...`;
+        function renderFiles() {
+            const files = state.upload.files;
+            fileList.classList.toggle('hidden', files.length === 0);
+            fileCount.textContent = `${files.length} photograph${files.length === 1 ? '' : 's'} staged`;
+            uploadBtn.disabled = files.length === 0 || state.upload.running;
+            fileGrid.innerHTML = files.map((item) => `
+                <div class="relative group border border-studio-border bg-studio-bg overflow-hidden aspect-square">
+                    <img src="${item.preview}" alt="" class="w-full h-full object-cover">
+                    <span class="absolute inset-x-0 bottom-0 px-2 py-1 text-[8px] uppercase tracking-[0.1em] text-studio-bg bg-studio-dark/70 truncate">${escapeHtml(item.status)}</span>
+                    ${!state.upload.running ? `<button type="button" data-remove="${item.id}" class="absolute top-1.5 right-1.5 h-6 w-6 bg-studio-dark/75 hover:bg-red-700 text-studio-bg text-sm leading-none" aria-label="Remove">&times;</button>` : ''}
+                </div>`).join('');
+
+            fileGrid.querySelectorAll('[data-remove]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const index = state.upload.files.findIndex((item) => item.id === button.dataset.remove);
+                    if (index >= 0) {
+                        URL.revokeObjectURL(state.upload.files[index].preview);
+                        state.upload.files.splice(index, 1);
+                        renderFiles();
+                    }
+                });
+            });
+        }
+
+        input.addEventListener('change', (event) => {
+            addFiles(event.target.files);
+            input.value = '';
+        });
+
+        ['dragenter', 'dragover'].forEach((type) => {
+            dropzone.addEventListener(type, (event) => {
+                event.preventDefault();
+                dropzone.classList.add('border-studio-dark', 'bg-studio-light');
+            });
+        });
+        ['dragleave', 'drop'].forEach((type) => {
+            dropzone.addEventListener(type, (event) => {
+                event.preventDefault();
+                dropzone.classList.remove('border-studio-dark', 'bg-studio-light');
+            });
+        });
+        dropzone.addEventListener('drop', (event) => {
+            if (event.dataTransfer && event.dataTransfer.files) addFiles(event.dataTransfer.files);
+        });
+
+        document.getElementById('clear-files').addEventListener('click', () => {
+            state.upload.files.forEach((item) => URL.revokeObjectURL(item.preview));
+            state.upload.files = [];
+            renderFiles();
+        });
+
+        uploadBtn.addEventListener('click', async () => {
+            if (state.upload.running) return;
+            const eventId = select.value;
+            if (!eventId) return toast('Choose a collection first.', 'error');
+            if (state.upload.files.length === 0) return;
+
+            state.upload.running = true;
+            state.upload.eventId = eventId;
+            uploadBtn.disabled = true;
+            uploadError.classList.add('hidden');
+            progress.classList.remove('hidden');
+            renderFiles();
+
+            const files = state.upload.files.slice();
+            const batches = [];
+            for (let index = 0; index < files.length; index += 2) batches.push(files.slice(index, index + 2));
+
+            let processed = 0;
+            let facesIndexed = 0;
+            let failures = [];
 
             try {
-                const imageUrls = await uploadBatchToServer(currentPhotographerFiles);
-                uploadStatus.textContent = `Phase 2/2: Mapping biometric embeddings and indexing vectors...`;
+                for (let batchIndex = 0; batchIndex < batches.length; batchIndex += 1) {
+                    const batch = batches[batchIndex];
+                    progressLabel.textContent = `Preparing batch ${batchIndex + 1} of ${batches.length}`;
+                    setProgress(Math.round((processed / files.length) * 100));
 
-                const response = await fetch('/api/upload-webhook', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ imageUrls, eventId, eventName })
-                });
+                    const prepared = [];
+                    for (const item of batch) {
+                        item.status = 'compressing';
+                        try {
+                            prepared.push({ item, file: await compressImage(item.file, { maxDimension: 2200, quality: 0.86, maxBytes: 1900 * 1024 }) });
+                        } catch (error) {
+                            item.status = 'failed';
+                            failures.push(`${item.file.name}: ${error.message}`);
+                        }
+                    }
+                    renderFiles();
 
-                const data = await parseResponseSafe(response);
-                indexBtn.disabled = false;
+                    if (prepared.length === 0) continue;
 
-                if (response.ok) {
-                    uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-studio-light border-studio-dark text-studio-dark block";
-                    uploadStatus.textContent = `Archival Complete. Processed: ${data.processedCount} assets | Biometric profiles mapped: ${data.facesIndexed}`;
-                    if (emptyUploadMsg) emptyUploadMsg.remove();
-                    
-                    imageUrls.forEach(url => {
-                        const imgContainer = document.createElement('div');
-                        imgContainer.className = "relative aspect-[4/5] overflow-hidden bg-studio-bg border border-studio-border group";
-                        imgContainer.innerHTML = `<img src="${url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">`;
-                        photographerGallery.appendChild(imgContainer);
+                    progressLabel.textContent = `Uploading batch ${batchIndex + 1} of ${batches.length}`;
+                    prepared.forEach(({ item }) => { item.status = 'uploading'; });
+                    renderFiles();
+
+                    const formData = new FormData();
+                    formData.append('eventId', eventId);
+                    prepared.forEach(({ file }) => formData.append('images', file));
+
+                    const storage = await api('/api/upload-storage', { method: 'POST', body: formData });
+
+                    progressLabel.textContent = `Indexing faces — batch ${batchIndex + 1} of ${batches.length}`;
+                    prepared.forEach(({ item }) => { item.status = 'indexing'; });
+                    renderFiles();
+
+                    const ingest = await api('/api/upload-webhook', {
+                        method: 'POST',
+                        body: { eventId, images: storage.assets }
                     });
-                    
-                    uploadForm.reset();
-                    uploadPreviewContainer.classList.add('hidden');
-                    currentPhotographerFiles = [];
-                    indexBtn.disabled = true;
-                    loadEvents();
-                } else { throw new Error(data.error); }
-            } catch (err) {
-                indexBtn.disabled = false;
-                uploadStatus.className = "mt-6 p-4 text-xs tracking-wide font-light border bg-red-50 border-red-200 text-red-900 block";
-                uploadStatus.textContent = `Transaction Failed: ${err.message}`;
-            }
-        });
 
-        async function loadEvents() {
-            const container = document.getElementById('events-list');
-            try {
-                const res = await fetch('/api/events');
-                const data = await parseResponseSafe(res);
-                if (!res.ok) throw new Error(data.error);
+                    processed += ingest.processedCount;
+                    facesIndexed += ingest.facesIndexed;
+                    ingest.results.forEach((result) => {
+                        if (result.error) failures.push(result.error);
+                    });
 
-                if (data.events.length === 0) {
-                    container.innerHTML = `<p class="text-center text-xs tracking-widest uppercase text-studio-muted py-12 font-light">No collections found in the active matrix.</p>`;
-                    return;
+                    prepared.forEach(({ item }) => {
+                        item.status = 'done';
+                        const stagedIndex = state.upload.files.findIndex((entry) => entry.id === item.id);
+                        if (stagedIndex >= 0) {
+                            URL.revokeObjectURL(state.upload.files[stagedIndex].preview);
+                            state.upload.files.splice(stagedIndex, 1);
+                        }
+                    });
+                    setProgress(Math.round((processed / files.length) * 100));
+                    renderFiles();
                 }
 
-                container.innerHTML = data.events.map(ev => `
-                    <div class="border border-studio-border p-6 bg-studio-bg/50">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-studio-border pb-4 mb-6 gap-2">
-                            <div>
-                                <h4 class="font-serif text-studio-dark text-2xl">${ev.eventName}</h4>
-                                <span class="text-[10px] uppercase tracking-widest text-studio-gold font-mono">ID: ${ev.eventId}</span>
-                            </div>
-                            <div class="sm:text-right flex sm:flex-col gap-4 sm:gap-0 text-xs uppercase tracking-widest text-studio-muted">
-                                <span class="text-studio-dark font-medium">${ev.photoCount} Photographs</span>
-                                <span>${ev.customers.length} Verified Guests</span>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h5 class="text-[10px] uppercase tracking-[0.2em] text-studio-muted mb-4 font-medium">Verified Client Roster</h5>
-                            ${ev.customers.length === 0 ? `<p class="text-xs text-studio-muted font-light italic">No clients have authenticated for this collection.</p>` : `
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                    ${ev.customers.map(c => `
-                                        <div class="bg-studio-card p-3 border border-studio-border flex justify-between items-center text-xs">
-                                            <div>
-                                                <span class="font-normal text-studio-dark block tracking-wide">${c.name}</span>
-                                                <span class="text-studio-muted font-mono text-[11px]">${c.phone}</span>
-                                            </div>
-                                            <span class="text-[9px] uppercase tracking-widest text-studio-gold border border-studio-gold/40 px-2 py-1">Verified</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            `}
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                container.innerHTML = `<p class="text-center text-xs tracking-widest uppercase text-red-700 py-12">Failed to synchronize matrix: ${err.message}</p>`;
+                await refreshEvents();
+                state.upload.files = [];
+                renderFiles();
+                progressValue.textContent = '100%';
+                progressLabel.textContent = 'Complete';
+                progressBar.style.width = '100%';
+
+                if (failures.length > 0) {
+                    uploadError.className = 'p-3.5 text-xs leading-relaxed border bg-amber-50 border-amber-200 text-amber-900';
+                    uploadError.innerHTML = `${processed} photograph(s) stored, but ${failures.length} could not be indexed. Open the collection and use “Retry” on those frames.<br><span class="block mt-1.5 font-mono text-[10px] break-all">${escapeHtml(failures.slice(0, 3).join(' • '))}</span>`;
+                } else {
+                    toast(`${processed} photograph(s) uploaded and indexed.`, 'success');
+                    uploadError.className = 'hidden';
+                }
+
+                setTimeout(() => navigate(`#/collection/${encodeURIComponent(eventId)}`), 900);
+            } catch (error) {
+                uploadError.className = 'p-3.5 text-xs leading-relaxed border bg-red-50 border-red-200 text-red-900';
+                uploadError.textContent = error.message;
+                toast(error.message, 'error');
+            } finally {
+                state.upload.running = false;
+                uploadBtn.disabled = state.upload.files.length === 0;
+                renderFiles();
             }
+        });
+
+        function setProgress(percent) {
+            const value = Math.max(0, Math.min(100, percent));
+            progressBar.style.width = `${value}%`;
+            progressValue.textContent = `${value}%`;
         }
 
-        loadEvents();
-    </script>
+        renderFiles();
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Account                                                             */
+    /* ------------------------------------------------------------------ */
+
+    function renderAccount() {
+        const photographer = state.photographer;
+        els.view.innerHTML = `
+            <div class="fade-in max-w-3xl mx-auto space-y-6">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-studio-muted mb-2">Settings</p>
+                    <h2 class="font-serif text-3xl sm:text-4xl leading-tight">Your account.</h2>
+                    <p class="text-xs text-studio-muted font-light mt-2">Studio details appear on guest galleries and watermarks.</p>
+                </div>
+
+                <section class="bg-studio-card border border-studio-border p-5 sm:p-7">
+                    <h3 class="font-serif text-2xl mb-5">Studio profile</h3>
+                    <form id="profile-form" class="space-y-5">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="profile-name" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Your name</label>
+                                <input id="profile-name" required value="${escapeHtml(photographer.name)}" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm">
+                            </div>
+                            <div>
+                                <label for="profile-studio" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Studio name</label>
+                                <input id="profile-studio" required value="${escapeHtml(photographer.studioName)}" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">Email</label>
+                            <input value="${escapeHtml(photographer.email)}" disabled class="w-full px-4 py-3 bg-studio-light border border-studio-border text-sm text-studio-muted">
+                        </div>
+                        <button type="submit" class="px-5 py-3 bg-studio-dark hover:bg-studio-accent text-studio-bg text-[10px] uppercase tracking-[0.16em] transition-colors min-h-[44px]">Save profile</button>
+                    </form>
+                </section>
+
+                <section class="bg-studio-card border border-studio-border p-5 sm:p-7">
+                    <h3 class="font-serif text-2xl mb-1.5">Change password</h3>
+                    <p class="text-[11px] text-studio-muted font-light mb-5">Use at least 8 characters. You will stay signed in on this device.</p>
+                    <form id="password-form" class="space-y-5">
+                        <div>
+                            <label for="new-password" class="block text-[10px] uppercase tracking-[0.18em] font-medium mb-2">New password</label>
+                            <input id="new-password" type="password" required minlength="8" autocomplete="new-password" class="w-full px-4 py-3 bg-studio-bg border border-studio-border focus:outline-none focus:border-studio-gold text-sm">
+                        </div>
+                        <button type="submit" class="px-5 py-3 border border-studio-border hover:bg-studio-light text-[10px] uppercase tracking-[0.16em] transition-colors min-h-[44px]">Update password</button>
+                    </form>
+                </section>
+
+                <section class="bg-studio-card border border-studio-border p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-serif text-xl">Sign out</h3>
+                        <p class="text-[11px] text-studio-muted font-light mt-1">End this session on this device.</p>
+                    </div>
+                    <button data-action="logout" class="px-5 py-3 border border-studio-border hover:bg-red-50 hover:border-red-200 hover:text-red-700 text-[10px] uppercase tracking-[0.16em] transition-colors min-h-[44px]">Sign out</button>
+                </section>
+            </div>`;
+
+        document.getElementById('profile-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            try {
+                const data = await api('/api/auth/profile', {
+                    method: 'PATCH',
+                    body: {
+                        name: document.getElementById('profile-name').value.trim(),
+                        studioName: document.getElementById('profile-studio').value.trim()
+                    }
+                });
+                state.photographer = data.photographer;
+                renderChrome();
+                toast('Profile saved.', 'success');
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+        });
+
+        document.getElementById('password-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            try {
+                await api('/api/auth/profile', {
+                    method: 'PATCH',
+                    body: { password: document.getElementById('new-password').value }
+                });
+                document.getElementById('new-password').value = '';
+                toast('Password updated.', 'success');
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+        });
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Global actions                                                      */
+    /* ------------------------------------------------------------------ */
+
+    const view = els.view;
+
+    view.addEventListener('click', async (event) => {
+        const target = event.target.closest('[data-action]');
+        if (!target) return;
+        const action = target.dataset.action;
+
+        if (action === 'create-event') {
+            openCreateModal();
+            return;
+        }
+
+        if (action === 'copy-link') {
+            const ok = await copyText(target.dataset.url);
+            toast(ok ? 'Guest link copied.' : 'Could not copy the link.', ok ? 'success' : 'error');
+            return;
+        }
+
+        if (action === 'show-qr') {
+            openQrModal(target.dataset.event);
+            return;
+        }
+
+        if (action === 'upload-to') {
+            if (target.dataset.event) state.upload.eventId = target.dataset.event;
+            // Anchors navigate on their own; empty-state buttons need a nudge.
+            if (target.tagName === 'BUTTON') navigate('#/upload');
+            return;
+        }
+
+        if (action === 'detail-tab') {
+            openCollection(state.detail.event.eventId, target.dataset.tab);
+            return;
+        }
+
+        if (action === 'detail-page') {
+            const page = Number(target.dataset.page);
+            if (page >= 1) openCollection(state.detail.event.eventId, 'photos', page);
+            return;
+        }
+
+        if (action === 'view-photo') {
+            openPhotoViewer(Number(target.dataset.index));
+            return;
+        }
+
+        if (action === 'delete-photo') {
+            const imageId = target.dataset.image;
+            const ok = await confirmAction({
+                title: 'Delete this photograph?',
+                message: 'It will be removed from Cloudinary and the face index. Guests will no longer see it.',
+                confirmLabel: 'Delete photo',
+                danger: true
+            });
+            if (!ok) return;
+            try {
+                await api(`/api/photos/${encodeURIComponent(imageId)}`, { method: 'DELETE' });
+                toast('Photograph deleted.', 'success');
+                await refreshEvents();
+                openCollection(state.detail.event.eventId, 'photos', state.detail.page);
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+            return;
+        }
+
+        if (action === 'reindex-photo') {
+            const imageId = target.dataset.image;
+            target.disabled = true;
+            target.textContent = '…';
+            try {
+                const result = await api(`/api/photos/${encodeURIComponent(imageId)}/reindex`, { method: 'POST' });
+                toast(`Indexed ${result.faces} face${result.faces === 1 ? '' : 's'}.`, 'success');
+                openCollection(state.detail.event.eventId, 'photos', state.detail.page);
+            } catch (error) {
+                toast(error.message, 'error');
+                target.disabled = false;
+                target.textContent = 'Retry';
+            }
+            return;
+        }
+
+        if (action === 'toggle-active') {
+            const eventId = target.dataset.event;
+            const nextActive = target.dataset.active === '1';
+            try {
+                const data = await api(`/api/events/${encodeURIComponent(eventId)}`, { method: 'PATCH', body: { active: nextActive } });
+                const index = state.events.findIndex((item) => item.eventId === eventId);
+                if (index >= 0) state.events[index] = { ...state.events[index], ...data.event };
+                toast(nextActive ? 'Collection reopened.' : 'Collection paused.', 'success');
+                openCollection(eventId, state.detail ? state.detail.tab : 'photos');
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+            return;
+        }
+
+        if (action === 'delete-event') {
+            const eventId = target.dataset.event;
+            const name = target.dataset.name;
+            const ok = await confirmAction({
+                title: 'Delete this collection?',
+                message: `“${name}” and all of its photographs, guest registrations and face vectors will be permanently removed. This cannot be undone.`,
+                confirmLabel: 'Delete collection',
+                danger: true
+            });
+            if (!ok) return;
+            try {
+                await api(`/api/events/${encodeURIComponent(eventId)}`, { method: 'DELETE' });
+                toast('Collection deleted.', 'success');
+                await refreshEvents();
+                navigate('#/collections');
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+        }
+    });
+
+    view.addEventListener('input', (event) => {
+        if (event.target.id === 'guest-search') {
+            const term = event.target.value.trim().toLowerCase();
+            document.querySelectorAll('.guest-row').forEach((row) => {
+                row.classList.toggle('hidden', term.length > 0 && !row.dataset.search.includes(term));
+            });
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        const nav = event.target.closest('[data-mobile-nav]');
+        if (nav) closeDrawer();
+
+        const closer = event.target.closest('[data-close]');
+        if (closer) closeModal(closer.dataset.close);
+
+        if (event.target.closest('[data-close-drawer]')) closeDrawer();
+    });
+
+    document.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-action="logout"]');
+        if (target) logout();
+    });
+
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+        document.getElementById('mobile-drawer').classList.remove('hidden');
+    });
+
+    async function logout() {
+        try {
+            await api('/api/auth/logout', { method: 'POST' });
+        } catch (error) {
+            // Even if the request fails, clear the local session view.
+        }
+        window.location.replace('/login');
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Create collection modal                                             */
+    /* ------------------------------------------------------------------ */
+
+    function openCreateModal() {
+        document.getElementById('create-form').reset();
+        document.getElementById('create-error').classList.add('hidden');
+        openModal('modal-create');
+        setTimeout(() => document.getElementById('create-name').focus(), 100);
+    }
+
+    document.getElementById('create-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const errorBox = document.getElementById('create-error');
+        const button = document.getElementById('create-btn');
+        errorBox.classList.add('hidden');
+        button.disabled = true;
+        button.textContent = 'Creating…';
+
+        try {
+            const data = await api('/api/events', {
+                method: 'POST',
+                body: {
+                    name: document.getElementById('create-name').value.trim(),
+                    eventId: document.getElementById('create-code').value.trim(),
+                    eventDate: document.getElementById('create-date').value || null
+                }
+            });
+            await refreshEvents();
+            closeModal('modal-create');
+            toast('Collection created.', 'success');
+            navigate(`#/collection/${encodeURIComponent(data.event.eventId)}`);
+        } catch (error) {
+            errorBox.textContent = error.message;
+            errorBox.classList.remove('hidden');
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Create';
+        }
+    });
+
+    /* ------------------------------------------------------------------ */
+    /* QR modal                                                            */
+    /* ------------------------------------------------------------------ */
+
+    function openQrModal(eventId) {
+        const event = state.events.find((item) => item.eventId === eventId);
+        if (!event) return;
+        state.qrEventId = eventId;
+
+        document.getElementById('qr-event-name').textContent = event.name;
+        document.getElementById('qr-link').textContent = event.shareUrl;
+        document.getElementById('qr-open').href = event.shareUrl;
+
+        const box = document.getElementById('qr-box');
+        box.innerHTML = '';
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(box, { text: event.shareUrl, width: 208, height: 208, correctLevel: QRCode.CorrectLevel.M });
+        } else {
+            box.innerHTML = '<p class="text-xs text-studio-muted p-6">QR renderer unavailable.</p>';
+        }
+        openModal('modal-qr');
+    }
+
+    document.getElementById('qr-copy').addEventListener('click', async () => {
+        const event = state.events.find((item) => item.eventId === state.qrEventId);
+        if (!event) return;
+        const ok = await copyText(event.shareUrl);
+        toast(ok ? 'Guest link copied.' : 'Could not copy the link.', ok ? 'success' : 'error');
+    });
+
+    document.getElementById('qr-download').addEventListener('click', () => {
+        const event = state.events.find((item) => item.eventId === state.qrEventId);
+        if (!event) return;
+        const box = document.getElementById('qr-box');
+        const canvas = box.querySelector('canvas');
+        const image = box.querySelector('img');
+        const dataUrl = canvas ? canvas.toDataURL('image/png') : (image && image.src);
+        if (!dataUrl) return toast('QR code is not ready yet.', 'error');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `Natural-Studio-${event.eventId}-QR.png`;
+        link.click();
+    });
+
+    /* ------------------------------------------------------------------ */
+    /* Owner photo viewer                                                  */
+    /* ------------------------------------------------------------------ */
+
+    function openPhotoViewer(index) {
+        if (!state.detail || !state.detail.photos[index]) return;
+        const photo = state.detail.photos[index];
+        document.getElementById('photo-image').src = photo.url;
+        document.getElementById('photo-download').href = photo.url;
+        document.getElementById('photo-title').textContent = `${state.detail.event.name} • ${photo.facesCount || 0} face(s) • ${formatDate(photo.uploadedAt)}`;
+        openModal('modal-photo');
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Modal helpers                                                       */
+    /* ------------------------------------------------------------------ */
+
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        if (id === 'modal-photo') document.getElementById('photo-image').removeAttribute('src');
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        ['modal-create', 'modal-qr', 'modal-photo'].forEach((id) => {
+            const modal = document.getElementById(id);
+            if (modal && !modal.classList.contains('hidden')) closeModal(id);
+        });
+        closeDrawer();
+    });
+
+    boot();
+</script>
 </body>
 </html>
